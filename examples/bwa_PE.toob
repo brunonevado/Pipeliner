@@ -1,0 +1,13 @@
+# first index reference
+bwa index -a is reference.fa
+
+# align fasq reads to reference
+bwa aln -n 6 reference.fa infile.1.fq > tempfile.1.sai
+bwa aln -n 6 reference.fa infile.2.fq > tempfile.2.sai
+
+# create bam file and sort it
+bwa sampe reference.fa tempfile.1.sai tempfile.2.sai infile.1.fq infile.2.fq | \
+samtools view -Sb - | samtools sort - outfile.bam
+
+# samtools sort adds an extra .bam extension to outfiles, so here we move the file into the proper name
+mv outfile.bam.bam outfile.bam

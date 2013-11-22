@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/alert.ico</file>
+        <file>icons/info.ico</file>
+        <file>icons/down.ico</file>
+        <file>icons/up.ico</file>
+        <file>icons/ffile.ico</file>
+        <file>icons/write.ico</file>
+        <file>icons/forward.ico</file>
+        <file>icons/back.ico</file>
+        <file>icons/save.ico</file>
+        <file>icons/addFile.ico</file>
+        <file>icons/delFile.png</file>
+        <file>icons/delete.png</file>
+        <file>icons/browse.ico</file>
+        <file>icons/plots.png</file>
+        <file>icons/ffolder.png</file>
+    </qresource>
+</RCC>

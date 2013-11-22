@@ -1,0 +1,12 @@
+# run art, single end, 50 bp read length, average coverage 10
+# note that this will result in an average coverage of 20
+# because there will be 2 sequences on the infile fasta (diploid individuals)
+# also, -o tempfile.art is not the outfile, but rather the prefix for all outfiles
+
+
+art_illumina -i infile.fas -l 50 -f 10 -o tempfile.art
+
+# art adds file extensions on its on, so now we need to move the resulting
+# fastaq file into the expected outfile.fq
+
+mv tempfile.art.fq outfile.fq

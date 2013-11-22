@@ -1,0 +1,3 @@
+macs 11 1000000 -t 0.001 | msformatter > infile.ms
+
+# remember to set the number of individuals to 5, ancestral type to random and length to 1000000 !

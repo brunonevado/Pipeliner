@@ -34,8 +34,9 @@ Pipeliner's GUI:
 
 THIS DISTRIBUTION INCLUDES:
 
-./R/plot_summary_pipeliner.R => R function to plot results manually
 ./doc/PipeManual.pdf         => PDF manual
 ./examples                   => example pdf output + user-defined steps
 ./source/command_tools       => source code for Pipeliner's command line tools
 ./source/GUI                 => source code for Pipeliner's GUI
+
+

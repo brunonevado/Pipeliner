@@ -1,0 +1,4 @@
+# to obtain the sites file, use the option EMIT_ALL_CONFIDENT_SITES
+java -jar /apps/GenomeAnalysisTK.jar -T UnifiedGenotyper -R reference.fa -I infile.bam -o outfile.sites --output_mode EMIT_ALL_CONFIDENT_SITES
+
+# remember to set column number to 2, and to adapt the path to GenomeAnalysisTK.jar!
