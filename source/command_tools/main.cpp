@@ -57,7 +57,7 @@ int nghcaller ( vector<string> * ,  vector<string> * );
 
 int main(int argc, char* argv[])
 {
-    string version = "0.2.0 20112013";
+    string version = "0.2.0 22112013";
     // 20112013 : added outcome rr_ro to summarisePipeline
     // 24102013 : added option to ignore multi-allelic SNPs in input vcf (if set, will consider only RR, RA1 and A1A1)
     vector <string> args;
