@@ -15,5 +15,7 @@
         <file>icons/browse.ico</file>
         <file>icons/plots.png</file>
         <file>icons/ffolder.png</file>
+        <file>icons/fullscreen.ico</file>
+        <file>icons/gnome_run.ico</file>
     </qresource>
 </RCC>

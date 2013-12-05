@@ -2,7 +2,7 @@
 //  vcf.h
 //  Pipeliner
 //
-//  Copyright (c) 2013 Bruno Nevado. All rights reserved.
+//  Copyright (c) 2013 Bruno Nevado. GNU license.
 //
 
 #ifndef __Pipeliner__vcf__
@@ -18,8 +18,6 @@
 using namespace std;
 class fasta;
 class ms;
-
-// VCF  CLASS
 
 class vcf {
     int inds;

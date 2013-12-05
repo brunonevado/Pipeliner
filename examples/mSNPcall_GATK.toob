@@ -1,4 +1,0 @@
-# multiple-sample SNP calling with GATK. Adapt the path to GenomeAnalysisTK.jar accordingly!
-java -jar /apps/GATK1.4.30/GenomeAnalysisTK.jar -T UnifiedGenotyper -R reference.fa -I all.infiles.bam -o outfile.allinds.vcf
-
-# remember to set the separator between bam files to -I!

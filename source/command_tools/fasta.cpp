@@ -2,8 +2,7 @@
 //  fasta.cpp
 //  Pipeliner
 //
-//  Created by Bruno Nevado on 17/06/2013.
-//  Copyright (c) 2013 Bruno Nevado. All rights reserved.
+//  Copyright (c) 2013 Bruno Nevado. GNU license.
 //
 
 #include <iostream>
@@ -18,8 +17,6 @@
 
 #include "fasta.h"
 
-// FASTA OBJECT CONSTRUCTOR
-
 fasta::fasta ( int num_inds, int len ){
     if(len == 0){
         names.reserve(num_inds);
@@ -31,17 +28,8 @@ fasta::fasta ( int num_inds, int len ){
         
         for(int i = 0; i < num_inds; i++)
             matrix.at(i).resize(len);
-        /*
-         string newline (len , NULL);
-         for(int i = 0; i < num_inds; i++)
-         matrix.push_back(newline);
-         
-         
-         */
     }
 }
-
-// FASTA OBJECT CALCULATE ALLELE COUNT
 
 int fasta::calc_dac ( char alt , unsigned int site ) {
     int freq = 0;
@@ -54,80 +42,14 @@ int fasta::calc_dac ( char alt , unsigned int site ) {
     return freq;
 }
 
-// FASTA OBJECT OUTPUT SNP FILES
-
-
-void fasta::outputSNPfiles( int cind, string prefix ){
-    
-    ofstream streamHomo, streamHetero;
-    
-    stringstream cindstr;
-    cindstr << cind;
-    string outfileHomo = prefix + ".Ind" + cindstr.str() + ".fixed";
-    string outfileHetero = prefix + ".Ind" + cindstr.str() + ".snps";
-    
-    streamHomo.open(outfileHomo.c_str());
-    if( !streamHomo.is_open() ){
-        cerr << "ERROR (outputSNPfiles): unable to open for output file " << outfileHomo << "\n";
-        exit(1);
-    }
-    streamHetero.open(outfileHetero.c_str());
-    if( !streamHetero.is_open() ){
-        cerr << "ERROR (outputSNPfiles): unable to open for output file " << outfileHetero << "\n";
-        exit(1);
-        
-    }
-    int i = (cind -1) * 2 + 1;
-    for( unsigned int j = 0; j < this->num_bases(); j++ ){
-        
-        if(matrix[0][j] == matrix[i][j] && matrix[i][j] == matrix[i+1][j])
-            continue;
-        // Fixed diff
-        if ( matrix[0][j] != matrix[i][j] && matrix[i][j] == matrix[i+1][j] ){
-            streamHomo << j+1 << "\t" << matrix[0][j] << "\t" << matrix[i][j] << "\t" << matrix[i+1][j]
-            << "\t" << calc_dac( matrix[i][j] , j+1 ) << "\n";
-            
-        }
-        // heterozygous SNP
-        else if ( (matrix[0][j] != matrix[i][j] && matrix[0][j] == matrix[i+1][j] )
-                 || (matrix[0][j] == matrix[i][j] && matrix[0][j] != matrix[i+1][j]) ){
-            streamHetero << j+1 << "\t" << matrix[0][j] << "\t" << matrix[i][j] << "\t" << matrix[i+1][j]
-            << "\t" << calc_dac( ( matrix[0][j] == matrix[i+1][j] ?  matrix[i][j] :  matrix[i+1][j] ) , j+1 ) << "\n";
-        }
-        else{
-            cout << "WARNING: position " << j+1 << " is triallelic (ref:" << matrix[0][j] << ",individual " << cind << ":" << matrix[i][j] << matrix[i+1][j] << ")\n" ;
-        }
-        
-    }
-    streamHomo.close();
-    streamHetero.close();
-    
-    
-}
-
-
-// FASTA CLASS SPEAKING FUNCTION
 
 void fasta::info_to_stdout () {
     
     cout << "Infile: " << this->input_file() << " (" << this->num_lines() << " sequences, " <<
     this->num_bases() << " bp long)\n";
     
-    /*
-     cout << "Name of sequences: ";
-     for(int i = 0; i < this->num_lines(); i++)
-     cout << this->names[i] << " ";
-     cout << "\n";
-     
-     cout<< "And the data matrix is:\n";
-     for(int i = 0; i < matrix.size(); i++)
-     cout << matrix[i] << "\n";
-     
-     
-     */
 }
 
-// FASTA CLASS FUNCTION: READ FASTA FILE
 
 void fasta::read_fasta_file( std::string infas){
     int cind = 0;
@@ -235,7 +157,7 @@ void fasta::write_to_file( string out, int append ){
         for( unsigned int i = 0; i < matrix.size(); i++){
             outputFile << ">" << names[i] << "\n";
             for (unsigned int site = 0; site < matrix.at(i).length(); site++) {
-                outputFile << toupper(matrix[i][site],loc); //  matrix[i][site];
+                outputFile << toupper(matrix[i][site],loc);
             }
             outputFile << endl;
         }
@@ -244,7 +166,7 @@ void fasta::write_to_file( string out, int append ){
         for( unsigned int i = 0; i < matrix.size(); i++){
             outputFile << ">i" << i+1 << "\n"; //
             for (unsigned int site = 0; site < matrix.at(i).length(); site++) {
-                outputFile << toupper(matrix[i][site],loc); //  matrix[i][site];
+                outputFile << toupper(matrix[i][site],loc);
             }
             outputFile << endl;
         }
@@ -293,7 +215,6 @@ void fasta::remove_multi_hits(){
 
 // BUILD FROM MS CLASS
 
-//void fasta::build_from_ms (ms in, fasta ancestral){
 void fasta::build_from_ms ( const ms& in, const fasta& ancestral){
     
     
@@ -347,42 +268,6 @@ void fasta::build_from_ms ( const ms& in, const fasta& ancestral){
     
 }
 
-
-// FOR KICKS
-
-
-void fasta::forkicks(){
-    ofstream outputFile;
-    outputFile.open("table.txt");
-    
-    double sites=0;
-    double start = 1;
-    for( unsigned int site = 0; site < this->num_bases(); site++){
-        int present=0;
-        for( unsigned int seq = 0; seq < this->num_lines(); seq++){
-            
-            if(matrix[seq][site] != 'n'){
-                present++;
-            }
-            if(present == int ( this->num_lines() ) )
-                sites++;
-            
-        }
-        
-        if(( site % 500000) == 0 ){
-            outputFile << fixed << start << "\t" << site << "\t" << sites << "\n";
-            start=site;
-            sites=0;
-            
-        }
-        
-        
-    }
-    
-    outputFile.close();
-    
-}
-
 // BUILD FROM VCF + SITES
 
 void fasta::build_from_vcf (const vcf& objvcf, const fasta& reference, string sites_file, string name, int column, int ind ){
@@ -411,12 +296,12 @@ void fasta::build_from_vcf (const vcf& objvcf, const fasta& reference, string si
     }
     
     infile_sites.open(sites_file.c_str());
-
+    
     string sites_line;
     unsigned int index_vcf = 0;
     
     for( unsigned int site_reference = 0; site_reference < reference.num_bases(); site_reference++ ){
-       
+        
         if( infile_sites.eof() || c == 0 ){
             while( site_reference < reference.num_bases() ){
                 new_haplo.push_back('n');
@@ -425,7 +310,7 @@ void fasta::build_from_vcf (const vcf& objvcf, const fasta& reference, string si
             }
             break;
         }
-
+        
         while ( sites_line.size() == 0  ){
             getline(infile_sites, sites_line);
         }
@@ -448,7 +333,7 @@ void fasta::build_from_vcf (const vcf& objvcf, const fasta& reference, string si
         
         else if ( site_sites == (site_reference + 1 ) ){
             
-              
+            
             // SITE WITH SOME DATA
             while( index_vcf < (unsigned) objvcf.positions.size()  && ( (unsigned) objvcf.positions.at(index_vcf) < ( site_reference + 1 ))  ){
                 index_vcf++;
@@ -483,7 +368,7 @@ void fasta::build_from_vcf (const vcf& objvcf, const fasta& reference, string si
 // FASTA ADD SEQUENCE OPTION
 
 void fasta::append_seq( fasta in, bool fill ){
-    // assuming both fasta objects are aligned within each other, and adding a the end
+    // assuming both fasta objects are aligned within each other, and adding at the end
     // of the shortest 'Ns'
     if(fill){
         
@@ -531,21 +416,6 @@ void fasta::append_seq( fasta in, bool fill ){
 }
 
 
-void fasta::build_from_ngh( unsigned int site, string col_to_add ){
-    //  cout << matrix.at(0).size() << " and " << site <<  "\n";
-    
-    while (matrix.at(0).size() < ( site - 1 ) ) {
-        for (unsigned int i = 0; i < col_to_add.size(); i++) {
-            matrix.at(i).push_back('n');
-        }
-    }
-    
-    for (unsigned int i = 0; i < col_to_add.size(); i++) {
-        matrix.at(i).push_back(col_to_add.at(i));
-    }
-}
-
-
 void fasta::resize_matrix( unsigned int start, unsigned int end ){
     for( unsigned int line = 0; line < matrix.size(); line++ ){
         string sub = matrix.at(line).substr(start - 1, end - start + 1  );
@@ -561,17 +431,17 @@ void fasta::mask_base ( unsigned int site1, char newchar, int index1){
         exit(1);
     }
     if( index1 == -1 ){
-    for (unsigned int line = 0; line < matrix.size(); line++) {
+        for (unsigned int line = 0; line < matrix.size(); line++) {
+            
+            if (site1  > matrix.at(line).size() ) {
+                cerr << "ERROR (fasta::mask_base): site to mask (" <<  site1 <<") out of bounds" << endl;
+                exit(1);
+            }
+            else{
+                matrix.at(line).at( site1 - 1 ) = tolower ( newchar );
+            }
+        }
         
-        if (site1  > matrix.at(line).size() ) {
-            cerr << "ERROR (fasta::mask_base): site to mask (" <<  site1 <<") out of bounds" << endl;
-            exit(1);
-        }
-        else{
-            matrix.at(line).at( site1 - 1 ) = tolower ( newchar );
-        }
-    }
-    
     }
     else{
         if (site1  > matrix.at(index1 -1 ).size() ) {
@@ -586,15 +456,15 @@ void fasta::mask_base ( unsigned int site1, char newchar, int index1){
 
 
 void fasta::new_fasta_from_inds ( fasta &infasta, vector <int> index0 ){
-
+    
     infile = infasta.infile;
     for (unsigned int line = 0; line < index0.size() ; line++ ) {
         matrix.push_back( infasta.matrix.at(index0.at(line)));
-       names.push_back( infasta.names.at(index0.at(line)));
+        names.push_back( infasta.names.at(index0.at(line)));
     }
 }
 
- 
+
 int fasta::concatenate_alignments( fasta & al2){
     if( matrix.size() != al2.num_lines()){
         cerr << "ERROR (concatenate fasta): number of sequences do not match!"  << endl;

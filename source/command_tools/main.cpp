@@ -2,7 +2,7 @@
 //  main.cpp
 //  Pipeliner
 //
-//  Copyright (c) 2013 Bruno Nevado. All rights reserved.
+//  Copyright (c) 2013 Bruno Nevado. GNU license.
 //
 // for linux, compile with g++ -Wall -g -std=c++0x -pthread -O3  *.cpp -o Pipeliner
 
@@ -22,11 +22,8 @@
 #include "vcf.h"
 #include "summarise.h"
 #include "sfscode.h"
-#include "ngh.h"
 
 using namespace std;
-
-// definitions
 
 int writeRandomSeq(vector<string> * ,  vector<string> *);
 
@@ -50,19 +47,16 @@ int sfs2fas ( vector<string> * ,  vector<string> * );
 
 int extract_gff_from_fas ( vector<string> * ,  vector<string> * );
 
-int nghcaller ( vector<string> * ,  vector<string> * );
-
 
 // MAIN
 
 int main(int argc, char* argv[])
 {
-    string version = "0.2.0 22112013";
+    string version = "0.2.0 20112013";
     // 20112013 : added outcome rr_ro to summarisePipeline
     // 24102013 : added option to ignore multi-allelic SNPs in input vcf (if set, will consider only RR, RA1 and A1A1)
     vector <string> args;
     vector <string> values;
-    //cout << "Welcome to Pipeliner.c++\n";
     
     if( argc == 1 ){
         cerr << "ERROR (" << argv[0] << "): called without command? Use 'Pipeliner help' for info\n";
@@ -80,7 +74,7 @@ int main(int argc, char* argv[])
     else {
         // seed the random number generator for whichever function.
         unsigned int seed = (unsigned)time(NULL);
-        cout << "Running Pipeliner.c++. Random seed for the run (if appropriate): " << seed << "\n";
+        cout << "Running Pipeliner. Random seed for the run (if appropriate): " << seed << "\n";
         srand(seed);
         
         for( int i = 2; i < argc; i += 2 )
@@ -95,14 +89,11 @@ int main(int argc, char* argv[])
         else if(  strncmp (argv[1] , "desinterleave", 5 ) == 0 ){
             desinterleave( &args, &values );
         }
-           else if(  strncmp (argv[1] , "ms2fas", 5 ) == 0 ){
+        else if(  strncmp (argv[1] , "ms2fas", 5 ) == 0 ){
             ms2fas( &args, &values );
         }
         else if(  strncmp (argv[1] , "vcf2fas", 5 ) == 0 ){
             vcf2fas( &args, &values );
-        }
-        else if(  strncmp (argv[1] , "nghcaller", 5 ) == 0 ){
-            nghcaller(&args, &values);
         }
         else if(  strncmp (argv[1] , "resizeFasta", 5 ) == 0 ){
             resizeFasta( &args, &values );
@@ -125,7 +116,7 @@ int main(int argc, char* argv[])
         else if(  strncmp (argv[1] , "extract_gff", 5 ) == 0 ){
             extract_gff_from_fas(&args, &values);
         }
-       else
+        else
         {
             cout << "ERROR (" << argv[0] << "): Fail to understand command " << argv[1] <<"\n";
             exit(1);
@@ -250,7 +241,7 @@ int desinterleave (vector<string> *inargs, vector<string> *invalues ){
     
     int aligned = afasta.is_aligned();
     if( aligned != 0){
-        cout << "WARNING (doSNPfiles): infile " << afasta.input_file() << " does not seem "
+        cout << "WARNING (desinterleave): infile " << afasta.input_file() << " does not seem "
         << "to be aligned (offending sequence: " << aligned +1 << ")\n";
     }
     if (force_names != "NA" ) {
@@ -259,7 +250,7 @@ int desinterleave (vector<string> *inargs, vector<string> *invalues ){
         
         afasta.set_all_names_to(force_names);
     }
-
+    
     afasta.write_to_file(outfile);
     
     
@@ -297,7 +288,7 @@ int ms2fas (vector<string> *inargs, vector<string> *invalues ) {
         else if(!strncmp (inargs->at(i).c_str(), "-force_names", 3) ){
             force_names = invalues->at(i).c_str();
         }
-      
+        
         else{
             cout << "ERROR (ms2fas): fail to understand argument value pair: " << inargs->at(i) << " " << invalues->at(i) << "\n";
         }
@@ -328,7 +319,7 @@ int ms2fas (vector<string> *inargs, vector<string> *invalues ) {
         ancestralfasta.info_to_stdout();
     }
     
-    ms ams (10); // the 10 is to reserve space for matrix. does it matter?
+    ms ams (10);
     ams.read_ms_file(in_ms);
     
     if(verbose){
@@ -370,7 +361,7 @@ int vcf2fas (vector<string> *inargs, vector<string> *invalues ) {
     
     string in_vcf = "NA", in_ref = "NA", in_sites = "NA", out_fas = "NA", names = "NA";
     int sites_col = 1, append=0, nt = 1;
-    bool verbose = false, ignore_multihits = false ;
+    bool verbose = false, ignore_multialleles = false ;
     for(unsigned int i = 0; i < inargs->size(); i++ ){
         if( strncmp (inargs->at(i).c_str(), "-", 1) ){
             cout << "ERROR (vcf2fas): fail to understand argument " << inargs->at(i) << "\n";
@@ -403,10 +394,10 @@ int vcf2fas (vector<string> *inargs, vector<string> *invalues ) {
         else if(!strncmp (inargs->at(i).c_str(), "-verbose", 2) ){
             verbose = stoi(invalues->at(i).c_str());
         }
-        else if(!strncmp (inargs->at(i).c_str(), "-ignoreMH", 6) ){
-            ignore_multihits = stoi(invalues->at(i).c_str());
+        else if(!strncmp (inargs->at(i).c_str(), "-ignoreMA", 6) ){
+            ignore_multialleles = stoi(invalues->at(i).c_str());
         }
-      
+        
         else{
             cout << "ERROR (vcf2fas): fail to understand argument value pair: " << inargs->at(i) << " " << invalues->at(i) << "\n";
         }
@@ -440,7 +431,7 @@ int vcf2fas (vector<string> *inargs, vector<string> *invalues ) {
     cout << "  Running vcf2fas (using " << nt << " thread(s) )\n";
     
     // VCF FILE
-    vcf avcf(in_vcf, ignore_multihits);
+    vcf avcf(in_vcf, ignore_multialleles);
     
     if( names != "NA" ){
         msplit( names, ",", &all_names );
@@ -462,7 +453,7 @@ int vcf2fas (vector<string> *inargs, vector<string> *invalues ) {
     if(verbose){
         cout << "  Input vcf: ";
         avcf.info_to_stdout();
-        if(ignore_multihits){
+        if(ignore_multialleles){
             std::cout << "Only first alternative allele considered!" << std::endl;
         }
     }
@@ -494,7 +485,6 @@ int vcf2fas (vector<string> *inargs, vector<string> *invalues ) {
                 if( cind > num_diploids)
                     break;
                 th.push_back( std::thread(&fasta::build_from_vcf,&newfasta, avcf, referencefasta, all_in_sites.at(cind-1), all_names.at(cind-1), sites_col, cind-1 ) );
-               // th.push_back( std::thread(&fasta::build_from_vcf,&newfasta, avcf, referencefasta, all_in_sites.at(cind-1), all_names.at(cind-1), sites_col, cind-1) );
             }
             if( cind > num_diploids)
                 break;
@@ -593,8 +583,6 @@ int resizeFasta (vector<string> *inargs, vector<string> *invalues ){
         
         if(verbose)
             cout << "  Region to output: " << start << "-" << end << endl;
-        
-        //afasta.info_to_stdout();
         
         afasta.write_to_file(outfile);
         cout << "  New fasta file written to " << outfile << endl;
@@ -810,15 +798,14 @@ int maskReference (vector<string> *inargs, vector<string> *invalues ) {
     return(0);
 }
 
-
 int summarisePipeline (vector<string> *inargs, vector<string> *invalues ) {
     
     // CHECK ARGS
     
     string in_vcf = "NA", in_fasta = "NA", in_sites = "NA", out_sum = "NA", tag = "NA", err_file = "NA";
     int sites_col = 1,  nt = 1;
-    bool append=false, verbose = false, ignore_multihits = false ;
-
+    bool append=false, verbose = false, ignore_multialleles = false ;
+    
     for(unsigned int i = 0; i < inargs->size(); i++ ){
         if( strncmp (inargs->at(i).c_str(), "-", 1) ){
             cout << "ERROR (summarisePipeline): fail to understand argument " << inargs->at(i) << "\n";
@@ -851,14 +838,9 @@ int summarisePipeline (vector<string> *inargs, vector<string> *invalues ) {
         else if(!strncmp (inargs->at(i).c_str(), "-errors", 2) ){
             err_file = invalues->at(i).c_str();
         }
-        else if(!strncmp (inargs->at(i).c_str(), "-ignoreMH", 6) ){
-            ignore_multihits = stoi(invalues->at(i).c_str());
+        else if(!strncmp (inargs->at(i).c_str(), "-ignoreMA", 6) ){
+            ignore_multialleles = stoi(invalues->at(i).c_str());
         }
-     /*
-         else if(!strncmp (inargs->at(i).c_str(), "-threads", 2) ){
-         nt = stoi(invalues->at(i).c_str());
-         }
-         */
         
         else{
             cout << "ERROR (summarisePipeline): fail to understand argument value pair: " << inargs->at(i) << " " << invalues->at(i) << "\n";
@@ -901,8 +883,7 @@ int summarisePipeline (vector<string> *inargs, vector<string> *invalues ) {
     unsigned int total_inds = 0;
     
     for( unsigned int avcf_index = 0; avcf_index < all_in_vcfs.size(); avcf_index++ ){
-       // vcf_objs.push_back( vcf::vcf(all_in_vcfs.at(avcf_index)) );
-        vcf_objs.push_back( vcf(all_in_vcfs.at(avcf_index), ignore_multihits) );
+        vcf_objs.push_back( vcf(all_in_vcfs.at(avcf_index), ignore_multialleles) );
         total_inds += vcf_objs.at(avcf_index).num_inds();
     }
     
@@ -945,9 +926,8 @@ int summarisePipeline (vector<string> *inargs, vector<string> *invalues ) {
     
     for( unsigned int avcf_index = 0; avcf_index < all_in_vcfs.size(); avcf_index++ ){
         
-        //all_fastas.push_back( fasta::fasta(vcf_objs.at(avcf_index).num_inds(),  int(original_fasta.num_bases() )) );
         all_fastas.push_back( fasta(vcf_objs.at(avcf_index).num_inds(),  int(original_fasta.num_bases() )) );
-   
+        
         // BEGIN OF PARALLEL PART, transforming into fasta format
         if(nt == 1){
             for(int i = 0; i < vcf_objs.at(avcf_index).num_inds(); i++ ){
@@ -972,10 +952,10 @@ int summarisePipeline (vector<string> *inargs, vector<string> *invalues ) {
         exit(1);
     }
     
-
+    
     // BEGIN OF PARALLEL PART, sumarising
     summarise asummary( original_fasta.num_lines() - 1, all_fastas.at(0).num_bases() );
-
+    
     if(nt == 1){
         for( unsigned int iind = 0; iind < total_inds; iind++ ){
             
@@ -994,7 +974,6 @@ int summarisePipeline (vector<string> *inargs, vector<string> *invalues ) {
     return(0);
 }
 
- 
 int sfs2fas (vector<string> *inargs, vector<string> *invalues ){
     
     
@@ -1115,14 +1094,12 @@ int sfs2fas (vector<string> *inargs, vector<string> *invalues ){
     
 }
 
-
 int extract_gff_from_fas (vector<string> *inargs, vector<string> *invalues ){
     
     
     // CHECK ARGS
     
     string infile = "NA", outfile = "NA", aff = "NA";
-    // unsigned int start = 0, end = 0;
     bool verbose = false;
     for(unsigned int i = 0; i < inargs->size(); i++ ){
         if( strncmp (inargs->at(i).c_str(), "-", 1) ){
@@ -1189,7 +1166,7 @@ int extract_gff_from_fas (vector<string> *inargs, vector<string> *invalues ){
     fasta newfasta( afasta.num_lines() );
     bool first = true;
     while (getline(infile_regions,line)) {
-         
+        
         vector <string> fields;
         fields.clear();
         msplit( line, "\t", &fields );
@@ -1201,7 +1178,7 @@ int extract_gff_from_fas (vector<string> *inargs, vector<string> *invalues ){
         
         unsigned int tstart = atoi( fields.at(0).c_str());
         unsigned int tend = atoi( fields.at(1).c_str());
-       
+        
         if ( tend > afasta.num_bases() ){
             cout << "ERROR(extract_gff): region " << tstart << ":" << tend << " is out of bounds (length of alignment is "
             << afasta.num_bases() << ")" << endl;
@@ -1212,153 +1189,27 @@ int extract_gff_from_fas (vector<string> *inargs, vector<string> *invalues ){
             first = false;
             newfasta = afasta;
             newfasta.resize_matrix(tstart, tend);
-          
+            
         }
         else{
-        
-         
-        fasta atempfasta (afasta.num_lines());
-        atempfasta = afasta;
-        atempfasta.resize_matrix(tstart, tend);
-        
-        newfasta.concatenate_alignments(atempfasta);
-    }
+            
+            
+            fasta atempfasta (afasta.num_lines());
+            atempfasta = afasta;
+            atempfasta.resize_matrix(tstart, tend);
+            
+            newfasta.concatenate_alignments(atempfasta);
+        }
     }
     
     
     newfasta.write_to_file(outfile);
     cout << "  New fasta file written to fasta file " << outfile << endl;
-
+    
     
     
     return 0;
 }
-
-int nghcaller(vector<string> *inargs, vector<string> *invalues ){
-    
-    // CHECK ARGS
-    string mindep = "3", maxdep = "100", platform = "33", baseq = "20", out_fas = "NA", root = "NA";
-    bool strict = true, verbose = false;
-    unsigned int minreads = 6;
-    
-    string outfile = "NA";
-    
-    for(unsigned int i = 0; i < inargs->size(); i++ ){
-        if( strncmp (inargs->at(i).c_str(), "-", 1) ){
-            cout << "ERROR (nghcaller): fail to understand argument " << inargs->at(i) << "\n";
-            exit(1);
-        }
-        else if( !strncmp (inargs->at(i).c_str(), "-mindep", 4)  ){
-            mindep = invalues->at(i) ;
-        }
-        else if( !strncmp (inargs->at(i).c_str(), "-maxdep", 4) ){
-            maxdep =  invalues->at(i);
-        }
-        else if( !strncmp (inargs->at(i).c_str(), "-platform", 4) ){
-            platform =  invalues->at(i);
-        }
-        else if( !strncmp (inargs->at(i).c_str(), "-baseq", 4) ){
-            baseq = invalues->at(i);
-        }
-        else if( !strncmp (inargs->at(i).c_str(), "-threshold", 4) ){
-            minreads =  atoi (invalues->at(i).c_str() );
-        }
-        else if( !strncmp (inargs->at(i).c_str(), "-root", 4) ){
-            root = invalues->at(i);
-        }
-        else if( !strncmp (inargs->at(i).c_str(), "-out_fas", 6) ){
-            out_fas = invalues->at(i);
-        }
-        else if( !strncmp (inargs->at(i).c_str(), "-strictness", 4)  ){
-            ( atoi (invalues->at(i).c_str() )) == 1 ? strict = true : strict = false;
-        }
-
-        else if(!strncmp (inargs->at(i).c_str(), "-verbose", 2) ){
-            verbose = stoi(invalues->at(i).c_str());
-        }
-        
-        else{
-            cout << "ERROR (nghcaller): fail to understand argument value pair: " << inargs->at(i) << " " << invalues->at(i) << "\n";
-        }
-        
-    }
-    
-    // CHECK ARGS
-    
-    if(out_fas == "NA" ){
-        cout << "ERROR(nghcaller): output file unspecified (-out_fas)\n";
-        exit(1);
-    }
-    
-      
-    // ARGS OK
-    
-    cout << "  Running nGHcaller\n";
-    
-    string lineInput;
-    
-    
-    // for debuggin purposes
-    //ifstream infile_mpileup ("test.small.mpileup");
-   // ifstream infile_mpileup ("./input_files/test.with_ref.mpileup");
-    //   ifstream infile_mpileup ("toyrun.mpileup");
-    
-    ngh angh( mindep, maxdep, platform, baseq, minreads, strict );
-    
-    
-    
-    getline(cin,lineInput);
-    
-    //getline(infile_mpileup,lineInput);
-    
-    vector <string> fields;
-    msplit(lineInput, "\t" , &fields);
-    angh.set_num_inds( (fields.size() - 3 )/3 );
-    
-    if(verbose){
-        cout << "  Settings for SNP calling: ";
-        angh.info_to_stdout();
-        cout << endl;
-    }
-    
-    fasta nameless_fasta(1);
-    nameless_fasta.set_num_inds(2*(fields.size() - 3 )/3 );
-    
-    ngh_parse_return a_parsed_line = angh.parse_mpileup(lineInput);
-    nameless_fasta.build_from_ngh( a_parsed_line.site,  angh.snp_call( a_parsed_line  ) );
-    
-   while (getline(cin,lineInput)) {
-        
-         //while (getline(infile_mpileup,lineInput)) {
-        
-        ngh_parse_return a_parsed_line = angh.parse_mpileup(lineInput);
-        nameless_fasta.build_from_ngh( a_parsed_line.site,  angh.snp_call( a_parsed_line  ) );
-        
-    }
-    
-    // Root with reference or outgroup
-    
-    fasta outgroup(1);
-    
-    if( root != "NA" ){
-        outgroup.read_fasta_file(root);
-        nameless_fasta.append_seq(outgroup, true);
-    }
-    if(verbose){
-        cout << "  SNP calling done" << endl;
-    }
-    
-    if (out_fas != "NA") {
-        nameless_fasta.write_to_file(out_fas);
-        cout << "  Output written to fasta file " << out_fas << endl;
-    }
-  
-    return (0);
-    
-}
-
-
-
 
 
 

@@ -1,5 +1,5 @@
-# index bam file
-samtools index infile.bam
 
-# Individual snp call with GATK.  Adapt the path to GenomeAnalysisTK.jar accordingly!
-java -jar /apps/GATK1.4.30/GenomeAnalysisTK.jar -T UnifiedGenotyper -R reference.fa -I infile.bam -o outfile.ind.vcf
+samtools index infile.bam
+# Adapt the path to GenomeAnalysisTK.jar accordingly!
+java -jar ./GenomeAnalysisTK.jar -T UnifiedGenotyper -R reference.fa \
+  -I infile.bam -o outfile.ind.vcf

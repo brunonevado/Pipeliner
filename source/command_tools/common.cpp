@@ -2,7 +2,7 @@
 //  common.cpp
 //  Pipeliner
 //
-//  Copyright (c) 2013 Bruno Nevado. All rights reserved.
+//  Copyright (c) 2013 Bruno Nevado. GNU license.
 //
 
 #include <fstream>
@@ -232,7 +232,7 @@ void help(){
     cout << "\n  *vcf2fas\n";
     cout << "   ~~~~~~~\n";
     cout << "\tusage: Pipeliner vcf2fas -in_vcf|vcf infile.vcf -in_ref|ref reference.fas -in_sites|sites infile.ind1.sites,infile.ind2.sites (...)\n";
-    cout << "\t                            (...) -out_fas|out output.fas [ -names ind1,ind2 -sites_col|col 1 -ignoreMH 1 -append 1 -threads n ]\n";
+    cout << "\t                            (...) -out_fas|out output.fas [ -names ind1,ind2 -sites_col|col 1 -ignoreMA 1 -append 1 -threads n ]\n";
     cout << "\targuments: -in_vcf|vcf: input vcf file (single or multiple individuals)\n";
     cout << "\t           -in_ref|ref: input reference fasta file\n";
     cout << "\t           -in_sites|sites: sites file, one per individual. Should contain, sorted and unique, the positions that are to be outputted\n";
@@ -241,7 +241,7 @@ void help(){
     cout << "\t           -threads: number of threads to use (experimental)\n";
     cout << "\t           -append: if 1 append to output file, otherwise overwrite (def: overwrite)\n";
     cout << "\t           -sites_col|col: which column in infile.sites contain the site numbers (def: column 1)\n";
-    cout << "\t           -ignoreMH: If set to 1, will only consider genotypes RR, RA1 and A1A1 - remaining genotypes are coded as missing (default: 0, i.e. all 10 possible genotypes are considered).\n";
+    cout << "\t           -ignoreMA: If set to 1, will only consider genotypes RR, RA1 and A1A1 - remaining genotypes are coded as missing (default: 0, i.e. all 10 possible genotypes are considered).\n";
     
     cout << "\tdescription: Takes a reference fasta file, a vcf file and 1 file per individual with sites to output (based e.g. on coverage level)\n";
     cout << "\t             and outputs a fasta file with all individuals present in the vcf file. In this output file, regions not present in the\n";
@@ -272,8 +272,8 @@ void help(){
     cout << "   ~~~~~~~~~~~~~~~~~\n";
     cout << "\tusage: Pipeliner summarisePipeline -in_vcf|vcf infile1.vcf,infile2.vcf -in_sites|sites infile.ind1.sites,infile.ind2.sites (...)\n";
     cout << "\t                            (...) -in_fasta|fasta infile.fas -tag string -out_sum|out outfile.txt [ -sites_col|col 1 ] (...)\n";
-    cout << "\t                            (...) [ -append 0 -errors file.txt -ignoreMH 1 ] \n";
-
+    cout << "\t                            (...) [ -append 0 -errors file.txt -ignoreMA 1 ] \n";
+    
     cout << "\targuments: -in_vcf|vcf: input vcf file (s) (single or multiple individuals allowed within each file)\n";
     cout << "\t           -in_sites|sites: sites file, one per individual. Positions not included in this list are treated as missing\n";
     cout << "\t           -sites_col|col: which column in infile.sites contain the site numbers (def: column 1)\n";
@@ -283,8 +283,8 @@ void help(){
     cout << "\t           -out_sum|out: file to write results\n";
     cout << "\t           -append: whether to append or overwrite outfile (def: overwrite)\n";
     cout << "\t           -errors: write detailed information on errors into file (def: do not write detailed info)\n";
-    cout << "\t           -ignoreMH: If set to 1, will only consider genotypes RR, RA1 and A1A1, treating remaining genotype calls as ambiguous (default: 0, i.e. all 10 possible genotypes are considered).\n";
-
+    cout << "\t           -ignoreMA: If set to 1, will only consider genotypes RR, RA1 and A1A1, treating remaining genotype calls as ambiguous (default: 0, i.e. all 10 possible genotypes are considered).\n";
+    
     cout << "\tdescription: Takes as input a fasta file with original sequence data, one or several vcf files, and one sites file per diploid individual.\n";
     cout << "\t             Reconstructs a new data matrix with rules: sites not present in the sites file, or considered ambiguous in the vcf file are coded as missing.\n";
     cout << "\t             Ambiguous sites in vcf file are those where more than one, or none of the genotypes, has 0 Phred-scaled likelihood. \n";
@@ -293,17 +293,17 @@ void help(){
     cout << "\t             homozygous and heterozygous SNPs, and the differnt outcomes (missed, correctly identified, and different error types).\n";
     cout << "\t             Results are reported overall and as function of Alternative Allele Count. If using -errors, reports to file the positions\n";
     cout << "\t             where errors occur, together with original and resulting genotypes, and AAC.\n";
-
+    
     
     
     cout << "\n######\nNotes:\n######\n";
     cout << "   .'-option1|option2 value' means either option1 or option2 can be used to specify same argument\n";
     cout << "   .'[-option value]' means argument is optional\n";
     cout << "   .'[-option1 value || -option2 value ]' means one of the arguments must be present\n";
-
+    
     cout << "   .most arguments' options can be shortened (e.g. -in instead of -infile)\n";
     cout << "   .running the different commands with '-verbose 1' will increase the information printed on screen\n\n";
-
+    
 }
 
 

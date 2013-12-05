@@ -1,4 +1,23 @@
-# to obtain the sites file, use the option EMIT_ALL_CONFIDENT_SITES
-java -jar /apps/GenomeAnalysisTK.jar -T UnifiedGenotyper -R reference.fa -I infile.bam -o outfile.sites --output_mode EMIT_ALL_CONFIDENT_SITES
+# obtain list of confident sites with GATK's EMIT_CONFIDENT_SITES option
+# Adapt the path to GenomeAnalysisTK.jar accordingly!
+java -jar ./GenomeAnalysisTK.jar -T UnifiedGenotyper -R reference.fa \
+  -I infile.bam -o tempfile.ind_number.vcf --output_mode EMIT_ALL_CONFIDENT_SITES
 
-# remember to set column number to 2, and to adapt the path to GenomeAnalysisTK.jar!
+# get confident homozygous-reference sites, with min and max dep
+cat tempfile.ind_number.vcf | grep -v "\./\." - | grep -v PL \
+  | awk -F: '{ if ($NF >=5 && $NF <= 20 ) print; }' \
+  | awk '{print $2}' - > tempfile.ind_number.confident_invar.sites
+# get snps from vcf file (ignore indels)
+# Adapt the path to GenomeAnalysisTK.jar accordingly!
+java -jar ./GenomeAnalysisTK.jar -T SelectVariants -R reference.fa \
+  -V  tempfile.ind_number.vcf  -selectType SNP -o tempfile.ind_number.iGATK.unflt_var.vcf
+# filter vcf
+# Adapt the path to GenomeAnalysisTK.jar accordingly!
+java -jar ./GenomeAnalysisTK.jar -T VariantFiltration -R reference.fa \
+  -V tempfile.ind_number.iGATK.unflt_var.vcf --filterExpression \
+"QD < 2.0 || FS > 60.0 || MQ < 40.0 || HaplotypeScore > 13.0 || MappingQualityRankSumTest < -12.5 || ReadPosRankSum < -8.0" \
+  --filterName "GATK_BP" -o tempfile.ind_number.iGATK.flt_var.vcf
+# now get sites with confident vars, and add sites with confident homozygous-reference calls
+grep PASS tempfile.ind_number.iGATK.flt_var.vcf | awk '{print $2}' > outfile.sites
+cat  tempfile.ind_number.confident_invar.sites >> outfile.sites
+

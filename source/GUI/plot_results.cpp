@@ -1,17 +1,10 @@
 //
-// plot_results.cpp
 //  pGUI
 //
-//  Copyright (c) 2013 Bruno Nevado. All rights reserved.
+//  Copyright (c) 2013 Bruno Nevado. GNU license
 //
 
 #include "plot_results.h"
-#include <sstream>
-#include <stdlib.h>
-#include <fstream>
-#include <stdio.h>
-#include <QDesktopServices>
-#include <QUrl>
 
 int get_token ( std::string s, int n ){
   int count = 0;
@@ -36,7 +29,7 @@ int get_token ( std::string s, int n ){
 
 plot_results::plot_results()
 {
-
+  // This is the R function to plot summary files from Pipeliner
   filename = "";
   tempfile = "";
 
@@ -643,10 +636,10 @@ std::string plot_results::work( paths path_bucket ) {
           else{
               std::string line;
               getline( inFile, line );
-                  inFile.close();
-                 // strncmp( line.c_str() , "# length" , 6 ) == 0
+              inFile.close();
+              // strncmp( line.c_str() , "# length" , 6 ) == 0
               if( strncmp( line.c_str() , "REP\tEFF_LENGTH2", 10) != 0){
-                return "mstats summary file " + files_mstats.at(i) + " is not correctly formatted?";
+                  return "mstats summary file " + files_mstats.at(i) + " is not correctly formatted?";
                 }
 
             }
@@ -738,22 +731,16 @@ std::string plot_results::work( paths path_bucket ) {
     }
 
   ss << path_bucket.get_path_R() << " --vanilla --slave --file=" << tempfile.c_str();
-
   system(ss.str().c_str());
-
   std::ifstream ipdfFile;
   ipdfFile.open(filename.c_str());
   if( !ipdfFile.is_open() ){
       return "Problems with R function writing to " + filename;
     }
   ipdfFile.close();
-
   QString qfile = QString::fromStdString( filename.c_str() );
   qfile.prepend("file://");
-
-
   bool opened = QDesktopServices::openUrl(QUrl(qfile, QUrl::TolerantMode) );
-
   if(!opened)
     return "Unable to open pdf " + filename;
   return "";

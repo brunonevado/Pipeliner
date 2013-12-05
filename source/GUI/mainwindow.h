@@ -1,16 +1,27 @@
 //
-//  mainwindow.h
 //  pGUI
 //
-//  Copyright (c) 2013 Bruno Nevado. All rights reserved.
+//  Copyright (c) 2013 Bruno Nevado. GNU license
 //
 
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QTextStream>
+#include <QRegExpValidator>
+#include <QStringList>
+#include <QList>
+#include <QApplication>
+#include <QStyleFactory>
+#include <stdlib.h>
+
+#include "ui_mainwindow.h"
 #include "pipeline.h"
 #include "highlighter.h"
+#include "bashrunner.h"
 
 namespace Ui {
 
@@ -20,10 +31,12 @@ namespace Ui {
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
-  
+
 public:
   explicit MainWindow(QWidget *parent = 0);
+
   ~MainWindow();
+
   pipeline * pointer_to_pipeline;
 
   void setDefaults() ;
@@ -98,7 +111,6 @@ private slots:
 
   void on_spinBox_art_fraglen_valueChanged(int arg1);
 
-
   void on_spinBox_art_fragsd_valueChanged(int arg1);
 
   void on_radioButton_art_pe_clicked();
@@ -115,12 +127,9 @@ private slots:
 
   void on_checkBox_bwa_rmdup_stateChanged();
 
-
   void on_radioButton_snp_sam_clicked();
 
-
   void on_radioButton_snp_user_clicked();
-
 
   void on_checkBox_sam_mSNPcall_stateChanged();
 
@@ -141,8 +150,10 @@ private slots:
   void on_actionLoad_paths_triggered();
 
   void SavePaths ();
+
   void LoadPaths ();
-  void SaveBash ();
+
+  QString SaveBash ();
 
   void on_pushButton_loadPaths_clicked();
 
@@ -152,9 +163,7 @@ private slots:
 
   void on_radioButton_input_user_clicked();
 
-
   void on_radioButton_align_bwa_clicked();
-
 
   void on_radioButton_align_user_clicked();
 
@@ -194,7 +203,6 @@ private slots:
 
   void on_pushButton_save_user_align_clicked();
 
-
   void on_pushButton_load_user_iSNP_clicked();
 
   void on_pushButton_save_user_iSNP_clicked();
@@ -231,7 +239,6 @@ private slots:
 
   void on_checkBox_stats_mstats_pre_clicked(bool checked);
 
-
   void on_pushButton_viewer_add_sum_clicked();
 
   void on_pushButton_viewer_del_sum_clicked();
@@ -239,7 +246,6 @@ private slots:
   void on_pushButton_viewer_up_sum_clicked();
 
   void on_pushButton_viewer_down_sum_clicked();
-
 
   void on_pushButton_viewer_add_sum_2_clicked();
 
@@ -259,11 +265,9 @@ private slots:
 
   void on_radioButton_plots_acc_full_clicked();
 
-
   void on_fontComboBox_currentFontChanged(const QFont &f);
 
   void on_spinBox_fontsize_valueChanged(int arg1);
-
 
   void on_pushButton_help_ms_clicked();
 
@@ -278,7 +282,6 @@ private slots:
   void on_pushButton_help_vcfutils_clicked();
 
   void on_pushButton_help_java_clicked();
-
 
   void on_pushButton_help_picard_clicked();
 
@@ -302,23 +305,37 @@ private slots:
 
   void on_checkBox_user_align_createDict_clicked(bool checked);
 
+  void on_spinBox_sam_minmapq_valueChanged(int arg1);
+
+  void on_pushButton_user_iSNPcall_bigScreen_clicked();
+
+  void on_pushButton_user_iSNPcall_BigScreen_close_clicked();
+
+  void on_pushButton_user_mSNPcall_bigScreen_clicked();
+
+  void on_pushButton_user_mSNPcall_BigScreen_close_clicked();
+
+  void on_pushButton_user_sites_bigScreen_clicked();
+
+  void on_pushButton_user_sites_BigScreen_close_clicked();
+
+  void on_pushButton_runLocally_clicked();
+
+  void on_actionRun_triggered();
 
 private:
   Ui::MainWindow *ui;
 
-  Highlighter *highlighter_user_in;
-
-  Highlighter *highlighter_user_ngs;
-
-  Highlighter *highlighter_user_align;
-
-  Highlighter *highlighter_user_snp_iSNP;
-
-  Highlighter *highlighter_user_snp_sites;
-
-  Highlighter *highlighter_user_snp_mSNP;
-
-  Highlighter *highlighter_bash;
+  Highlighter *highlighter_user_in,
+  *highlighter_user_ngs,
+  *highlighter_user_align,
+  *highlighter_user_snp_iSNP,
+  *highlighter_user_snp_iSNP_bigScreen,
+  *highlighter_user_snp_mSNP_bigScreen,
+  *highlighter_user_snp_sites_bigScreen,
+  *highlighter_user_snp_sites,
+  *highlighter_user_snp_mSNP,
+  *highlighter_bash;
 
   std::string version_info;
 
@@ -328,16 +345,15 @@ private:
 
   void pipeliner_manual( );
 
-  void toggle_full_screen();
-
-  QIcon iAlert, iSaveFile, iOpenFile, iOpenFolder,
-    iInfo, iWrite, iTrash, iUp, iDown, iBack, iForw, iPlot, iAddFile, iDelFile, iBrowse;
+  QIcon iAlert, iSaveFile, iOpenFile, iOpenFolder, iFullScreen, iRun,
+  iInfo, iWrite, iTrash, iUp, iDown, iBack, iForw, iPlot, iAddFile, iDelFile, iBrowse;
 
   std::vector < QTabWidget * > tutorial_widgets;
 
-public slots:
-  void about();
 
+public slots:
+
+  void about();
 
 };
 

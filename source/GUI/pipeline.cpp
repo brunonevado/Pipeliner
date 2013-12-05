@@ -1,13 +1,11 @@
 //
-//  pipeline.cpp
 //  pGUI
 //
-//  Copyright (c) 2013 Bruno Nevado. All rights reserved.
+//  Copyright (c) 2013 Bruno Nevado. GNU license
 //
 
+
 #include "pipeline.h"
-#include <sstream>
-#include <fstream>
 
 pipeline::pipeline( std::string name ){
   pipeline_name = name;
@@ -75,49 +73,49 @@ pipeline_output pipeline::get_cmds (){
 
 
   if( sum_iSNPcall ){
-     toreturn.push_back("if [[ -f $RUNFOLDER/summary.$RUNPREFIX.iSNPcall.txt ]]");
-     toreturn.push_back("\tthen rm $RUNFOLDER/summary.$RUNPREFIX.iSNPcall.txt;");
-     toreturn.push_back("\techo \"WARNING: found and deleted old summary file (iSNPcall)\"; fi");
+      toreturn.push_back("if [[ -f $RUNFOLDER/summary.$RUNPREFIX.iSNPcall.txt ]]");
+      toreturn.push_back("\tthen rm $RUNFOLDER/summary.$RUNPREFIX.iSNPcall.txt;");
+      toreturn.push_back("\techo \"WARNING: found and deleted old summary file (iSNPcall)\"; fi");
     }
   if( sum_mSNPcall ){
-     toreturn.push_back("if [[ -f $RUNFOLDER/summary.$RUNPREFIX.mSNPcall.txt ]]");
-     toreturn.push_back("\tthen rm $RUNFOLDER/summary.$RUNPREFIX.mSNPcall.txt;");
-     toreturn.push_back("\techo \"WARNING: found and deleted old summary file (mSNPcall)\"; fi");
+      toreturn.push_back("if [[ -f $RUNFOLDER/summary.$RUNPREFIX.mSNPcall.txt ]]");
+      toreturn.push_back("\tthen rm $RUNFOLDER/summary.$RUNPREFIX.mSNPcall.txt;");
+      toreturn.push_back("\techo \"WARNING: found and deleted old summary file (mSNPcall)\"; fi");
     }
   if( inspect_iSNPcall ){
-     toreturn.push_back("if [[ -f $RUNFOLDER/summary.$RUNPREFIX.iSNPcall_errors.txt ]]");
-     toreturn.push_back("\tthen rm $RUNFOLDER/summary.$RUNPREFIX.iSNPcall_errors.txt;");
-     toreturn.push_back("\techo \"WARNING: found and deleted old summary file (iSNPcall_errors)\"; fi;");
-     toreturn.push_back("printf \"REP\\tIND\\tSITE\\tERR_TYPE\\tCONFIG\\t:\\tMPILEUP LINE\\t(BASE QUALS)\\n\" \\");
-     toreturn.push_back("  > $RUNFOLDER/summary.$RUNPREFIX.iSNPcall_errors.txt");
+      toreturn.push_back("if [[ -f $RUNFOLDER/summary.$RUNPREFIX.iSNPcall_errors.txt ]]");
+      toreturn.push_back("\tthen rm $RUNFOLDER/summary.$RUNPREFIX.iSNPcall_errors.txt;");
+      toreturn.push_back("\techo \"WARNING: found and deleted old summary file (iSNPcall_errors)\"; fi;");
+      toreturn.push_back("printf \"REP\\tIND\\tSITE\\tERR_TYPE\\tCONFIG\\t:\\tMPILEUP LINE\\t(BASE QUALS)\\n\" \\");
+      toreturn.push_back("  > $RUNFOLDER/summary.$RUNPREFIX.iSNPcall_errors.txt");
     }
   if( inspect_mSNPcall ){
-     toreturn.push_back("if [[ -f $RUNFOLDER/summary.$RUNPREFIX.mSNPcall_errors.txt ]]");
-     toreturn.push_back("\tthen rm $RUNFOLDER/summary.$RUNPREFIX.mSNPcall_errors.txt;");
-     toreturn.push_back("\techo \"WARNING: found and deleted old summary file mSNPcall_errors)\"; fi;");
-     toreturn.push_back("printf \"REP\\tIND\\tSITE\\tERR_TYPE\\tCONFIG\\t:\\tMPILEUP LINE\\t(BASE QUALS)\\n\" \\");
-     toreturn.push_back("  > $RUNFOLDER/summary.$RUNPREFIX.mSNPcall_errors.txt");
+      toreturn.push_back("if [[ -f $RUNFOLDER/summary.$RUNPREFIX.mSNPcall_errors.txt ]]");
+      toreturn.push_back("\tthen rm $RUNFOLDER/summary.$RUNPREFIX.mSNPcall_errors.txt;");
+      toreturn.push_back("\techo \"WARNING: found and deleted old summary file mSNPcall_errors)\"; fi;");
+      toreturn.push_back("printf \"REP\\tIND\\tSITE\\tERR_TYPE\\tCONFIG\\t:\\tMPILEUP LINE\\t(BASE QUALS)\\n\" \\");
+      toreturn.push_back("  > $RUNFOLDER/summary.$RUNPREFIX.mSNPcall_errors.txt");
     }
   if( mstats_pre ){
-     toreturn.push_back("if [[ -f $RUNFOLDER/summary.$RUNPREFIX.preseq_mstats.txt ]]");
-     toreturn.push_back("\tthen rm $RUNFOLDER/summary.$RUNPREFIX.preseq_mstats.txt;");
-     toreturn.push_back("\techo \"WARNING: found and deleted old summary file (preseq_mstats)\"; fi;");
-     toreturn.push_back("printf \"REP\\tEFF_LENGTH2\\tSS\\tTHETA\\tPI\\tTAJ_D\\tFULI_D\\tFAYWU_H\\n\" \\");
-     toreturn.push_back("  > $RUNFOLDER/summary.$RUNPREFIX.preseq_mstats.txt");
+      toreturn.push_back("if [[ -f $RUNFOLDER/summary.$RUNPREFIX.preseq_mstats.txt ]]");
+      toreturn.push_back("\tthen rm $RUNFOLDER/summary.$RUNPREFIX.preseq_mstats.txt;");
+      toreturn.push_back("\techo \"WARNING: found and deleted old summary file (preseq_mstats)\"; fi;");
+      toreturn.push_back("printf \"REP\\tEFF_LENGTH2\\tSS\\tTHETA\\tPI\\tTAJ_D\\tFULI_D\\tFAYWU_H\\n\" \\");
+      toreturn.push_back("  > $RUNFOLDER/summary.$RUNPREFIX.preseq_mstats.txt");
     }
   if( mstats_iSNPcall ){
-     toreturn.push_back("if [[ -f $RUNFOLDER/summary.$RUNPREFIX.iSNPcall_mstats.txt ]]");
-     toreturn.push_back("\tthen rm $RUNFOLDER/summary.$RUNPREFIX.iSNPcal_mstats.txt;");
-     toreturn.push_back("\techo \"WARNING: found and deleted old summary file (iSNPcall_mstats)\"; fi;");
-     toreturn.push_back("printf \"REP\\tEFF_LENGTH2\\tSS\\tTHETA\\tPI\\tTAJ_D\\tFULI_D\\tFAYWU_H\\n\" \\");
-     toreturn.push_back("  > $RUNFOLDER/summary.$RUNPREFIX.iSNPcall_mstats.txt");
+      toreturn.push_back("if [[ -f $RUNFOLDER/summary.$RUNPREFIX.iSNPcall_mstats.txt ]]");
+      toreturn.push_back("\tthen rm $RUNFOLDER/summary.$RUNPREFIX.iSNPcall_mstats.txt;");
+      toreturn.push_back("\techo \"WARNING: found and deleted old summary file (iSNPcall_mstats)\"; fi;");
+      toreturn.push_back("printf \"REP\\tEFF_LENGTH2\\tSS\\tTHETA\\tPI\\tTAJ_D\\tFULI_D\\tFAYWU_H\\n\" \\");
+      toreturn.push_back("  > $RUNFOLDER/summary.$RUNPREFIX.iSNPcall_mstats.txt");
     }
   if( mstats_mSNPcall ){
-     toreturn.push_back("if [[ -f $RUNFOLDER/summary.$RUNPREFIX.mSNPcall_mstats.txt ]]");
-     toreturn.push_back("\tthen rm $RUNFOLDER/summary.$RUNPREFIX.mSNPcall_mstats.txt;");
-     toreturn.push_back("\techo \"WARNING: found and deleted old summary file (mSNPcall_mstats)\"; fi;");
-     toreturn.push_back("printf \"REP\\tEFF_LENGTH2\\tSS\\tTHETA\\tPI\\tTAJ_D\\tFULI_D\\tFAYWU_H\\n\" \\");
-     toreturn.push_back("  > $RUNFOLDER/summary.$RUNPREFIX.mSNPcall_mstats.txt");
+      toreturn.push_back("if [[ -f $RUNFOLDER/summary.$RUNPREFIX.mSNPcall_mstats.txt ]]");
+      toreturn.push_back("\tthen rm $RUNFOLDER/summary.$RUNPREFIX.mSNPcall_mstats.txt;");
+      toreturn.push_back("\techo \"WARNING: found and deleted old summary file (mSNPcall_mstats)\"; fi;");
+      toreturn.push_back("printf \"REP\\tEFF_LENGTH2\\tSS\\tTHETA\\tPI\\tTAJ_D\\tFULI_D\\tFAYWU_H\\n\" \\");
+      toreturn.push_back("  > $RUNFOLDER/summary.$RUNPREFIX.mSNPcall_mstats.txt");
     }
 
   toreturn.push_back("");
@@ -190,7 +188,7 @@ pipeline_output pipeline::get_cmds (){
         }
       break;
     default:
-      std::cout << "Only bwa alignment type available !" << std::endl;
+      std::cout << "Only bwa and user-defined alignment type available !" << std::endl;
       break;
     }
   for (unsigned int icmd = 0; icmd < cmds.size(); icmd++ ) {
@@ -228,7 +226,14 @@ pipeline_output pipeline::get_cmds (){
   toreturn.push_back("\tSAVE_IFS=$IFS");
   toreturn.push_back("\tIFS=\",\"");
   toreturn.push_back("\tsites_list=\"${ALL_SITES_FILES[*]}\"");
+
+  if( active_snpcall == 0)
+    toreturn.push_back("\tsites_mlist=\"${ALL_mSITES_FILES[*]}\"");
+  else
+    toreturn.push_back("\tsites_mlist=\"${ALL_SITES_FILES[*]}\"");
+
   toreturn.push_back("\tvcf_list=\"${ALL_IND_VCF_FILES[*]}\"");
+
   toreturn.push_back("\tms_vcf_list=\"${ALL_MS_VCF_FILES[*]}\"");
   toreturn.push_back("\tIFS=$SAVE_IFS");
 
@@ -257,9 +262,13 @@ pipeline_output pipeline::get_cmds (){
       toreturn.push_back(ss.str()); ss.str("");
       toreturn.push_back("\t  -in_vcf $vcf_list \\");
       toreturn.push_back("\t  -sites $sites_list -append 1 \\");
+      if ( active_snpcall == 0 ){
+          toreturn.push_back("\t  -ignoreMA 1 \\");
+        }
       if( inspect_iSNPcall ){
           toreturn.push_back( "\t  -error $RUNFOLDER/$RUNPREFIX.replicate$REP.iSNPcall.errors \\" );
         }
+
       toreturn.push_back( part );
       toreturn.push_back("");
 
@@ -268,18 +277,18 @@ pipeline_output pipeline::get_cmds (){
           ss << "\t" << daPaths.get_path_perl() << " -e '$cmdo=\"" << daPaths.get_path_samtools()
              << " mpileup -f '$RUNFOLDER/$RUNPREFIX'.replicate'$REP'.reference.fa \".";
           toreturn.push_back(ss.str()); ss.str("");
-         toreturn.push_back( "\t  \"'$RUNFOLDER/$RUNPREFIX'.replicate'$REP'.INDIVIDUAL.bam -r chr1:SITE-SITE 2> /dev/null\";");
-         toreturn.push_back( "\t  while(<>){" );
-         toreturn.push_back( "\t  chomp; $cmd=$cmdo; @t=split(/\\t/,$_);" );
-         toreturn.push_back( "\t  $cmd =~ s/INDIVIDUAL/Ind$t[0]/;" );
-         toreturn.push_back( "\t  $cmd =~ s/SITE/$t[1]/g;" );
-         toreturn.push_back( "\t  $r=`$cmd`; chomp $r;" );
-         toreturn.push_back( "\t  print '$REP', \"\\t\", $_, \"\\t:\\t\", $r, \"\\t(\";" );
-         toreturn.push_back( "\t  @t=split/\\t/,$r;@qs=split//,$t[$#t];" );
-         ss << "\t  @q=map {ord($_)-" <<  qual_offset << "} @qs;print \"@q)\\n\";";
-         toreturn.push_back(ss.str()); ss.str("");
-         toreturn.push_back( "\t  }' < $RUNFOLDER/$RUNPREFIX.replicate$REP.iSNPcall.errors \\" );
-         toreturn.push_back( "\t  >> $RUNFOLDER/summary.$RUNPREFIX.iSNPcall_errors.txt" );
+          toreturn.push_back( "\t  \"'$RUNFOLDER/$RUNPREFIX'.replicate'$REP'.INDIVIDUAL.bam -r chr1:SITE-SITE 2> /dev/null\";");
+          toreturn.push_back( "\t  while(<>){" );
+          toreturn.push_back( "\t  chomp; $cmd=$cmdo; @t=split(/\\t/,$_);" );
+          toreturn.push_back( "\t  $cmd =~ s/INDIVIDUAL/Ind$t[0]/;" );
+          toreturn.push_back( "\t  $cmd =~ s/SITE/$t[1]/g;" );
+          toreturn.push_back( "\t  $r=`$cmd`; chomp $r;" );
+          toreturn.push_back( "\t  print '$REP', \"\\t\", $_, \"\\t:\\t\", $r, \"\\t(\";" );
+          toreturn.push_back( "\t  @t=split/\\t/,$r;@qs=split//,$t[$#t];" );
+          ss << "\t  @q=map {ord($_)-" <<  qual_offset << "} @qs;print \"@q)\\n\";";
+          toreturn.push_back(ss.str()); ss.str("");
+          toreturn.push_back( "\t  }' < $RUNFOLDER/$RUNPREFIX.replicate$REP.iSNPcall.errors \\" );
+          toreturn.push_back( "\t  >> $RUNFOLDER/summary.$RUNPREFIX.iSNPcall_errors.txt" );
 
         }
 
@@ -309,7 +318,11 @@ pipeline_output pipeline::get_cmds (){
       ss << "\t" << daPaths.get_path_pipeliner() << " summarisePipeline -in_fasta $RUNFOLDER/$RUNPREFIX.replicate$REP.fas \\";
       toreturn.push_back(ss.str()); ss.str("");
       toreturn.push_back("\t  -in_vcf $ms_vcf_list \\");
-      toreturn.push_back("\t  -sites $sites_list -append 1 \\");
+      toreturn.push_back("\t  -sites $sites_mlist -append 1 \\");
+      if ( active_snpcall == 0 ){
+          toreturn.push_back("\t  -ignoreMA 1 \\");
+        }
+
       if( inspect_mSNPcall ){
           toreturn.push_back( "\t  -error $RUNFOLDER/$RUNPREFIX.replicate$REP.mSNPcall.errors \\" );
         }
@@ -321,18 +334,18 @@ pipeline_output pipeline::get_cmds (){
           ss << "\t" << daPaths.get_path_perl() << " -e '$cmdo=\"" << daPaths.get_path_samtools()
              << " mpileup -f '$RUNFOLDER/$RUNPREFIX'.replicate'$REP'.reference.fa \".";
           toreturn.push_back(ss.str()); ss.str("");
-         toreturn.push_back( "\t  \"'$RUNFOLDER/$RUNPREFIX'.replicate'$REP'.INDIVIDUAL.bam -r chr1:SITE-SITE 2> /dev/null\";");
-         toreturn.push_back( "\t  while(<>){" );
-         toreturn.push_back( "\t  chomp; $cmd=$cmdo; @t=split(/\\t/,$_);" );
-         toreturn.push_back( "\t  $cmd =~ s/INDIVIDUAL/Ind$t[0]/;" );
-         toreturn.push_back( "\t  $cmd =~ s/SITE/$t[1]/g;" );
-         toreturn.push_back( "\t  $r=`$cmd`; chomp $r;" );
-         toreturn.push_back( "\t  print '$REP', \"\\t\", $_, \"\\t:\\t\", $r, \"\\t(\";" );
-         toreturn.push_back( "\t  @t=split/\\t/,$r;@qs=split//,$t[$#t];" );
-         ss << "\t  @q=map {ord($_)-" <<  qual_offset << "} @qs;print \"@q)\\n\";";
-         toreturn.push_back(ss.str()); ss.str("");
-         toreturn.push_back( "\t  }' < $RUNFOLDER/$RUNPREFIX.replicate$REP.mSNPcall.errors \\" );
-         toreturn.push_back( "\t  >> $RUNFOLDER/summary.$RUNPREFIX.mSNPcall_errors.txt" );
+          toreturn.push_back( "\t  \"'$RUNFOLDER/$RUNPREFIX'.replicate'$REP'.INDIVIDUAL.bam -r chr1:SITE-SITE 2> /dev/null\";");
+          toreturn.push_back( "\t  while(<>){" );
+          toreturn.push_back( "\t  chomp; $cmd=$cmdo; @t=split(/\\t/,$_);" );
+          toreturn.push_back( "\t  $cmd =~ s/INDIVIDUAL/Ind$t[0]/;" );
+          toreturn.push_back( "\t  $cmd =~ s/SITE/$t[1]/g;" );
+          toreturn.push_back( "\t  $r=`$cmd`; chomp $r;" );
+          toreturn.push_back( "\t  print '$REP', \"\\t\", $_, \"\\t:\\t\", $r, \"\\t(\";" );
+          toreturn.push_back( "\t  @t=split/\\t/,$r;@qs=split//,$t[$#t];" );
+          ss << "\t  @q=map {ord($_)-" <<  qual_offset << "} @qs;print \"@q)\\n\";";
+          toreturn.push_back(ss.str()); ss.str("");
+          toreturn.push_back( "\t  }' < $RUNFOLDER/$RUNPREFIX.replicate$REP.mSNPcall.errors \\" );
+          toreturn.push_back( "\t  >> $RUNFOLDER/summary.$RUNPREFIX.mSNPcall_errors.txt" );
 
         }
 
@@ -340,28 +353,28 @@ pipeline_output pipeline::get_cmds (){
 
 
 
-    if( mstats_pre ){
-        toreturn.push_back("");
-        toreturn.push_back("\t# CALCULATING POP GENOMICS STATISTICS (pre-sequencing)");
-        std::stringstream ss;
-        toreturn.push_back( "\tsed \"1,2d\" $RUNFOLDER/$RUNPREFIX.replicate$REP.fas \\" );
-        toreturn.push_back( "\t   > $RUNFOLDER/$RUNPREFIX.replicate$REP.fas.pre_mstats.fas" );
-        toreturn.push_back( "\tsed -n \"1,2p\" $RUNFOLDER/$RUNPREFIX.replicate$REP.fas \\" );
-        toreturn.push_back( "\t  >> $RUNFOLDER/$RUNPREFIX.replicate$REP.fas.pre_mstats.fas" );
-        ss << "\t" << daPaths.get_path_mstats() << " -i $RUNFOLDER/$RUNPREFIX.replicate$REP.fas.pre_mstats.fas -f fasta \\" ;
-        toreturn.push_back(ss.str()); ss.str("");
-        toreturn.push_back( "\t  -o 1 -N 2 $(($NUMINDS*2)) 1 -G 1 -p 1 -u 1 | \\");
-        ss << "\t  " << daPaths.get_path_perl() << " -ne 'print '$REP',\"\\t\",$1,\"\\t\",$2,\"\\t\",$3,\"\\t\",$4,\"\\t\",$5,\"\\t\",$6,\"\\t\",$7,\"\\n\"if";
-        toreturn.push_back(ss.str()); ss.str("");
-        toreturn.push_back("\t  /");
-        toreturn.push_back("\t   Eff_length2_pop\\[0]\\:\\t(.+?)\\t.*");
-        toreturn.push_back("\t   S\\[0]\\:\\t(.+?)\\t.*");
-        toreturn.push_back("\t   Theta\\(Wat\\)\\[0]\\:\\t(.+?)\\t.*");
-        toreturn.push_back("\t   Theta\\(Taj\\)\\[0]\\:\\t(.+?)\\t.*");
-        toreturn.push_back("\t   TajimaD\\[0]\\:\\t(.+?)\\t.*");
-        toreturn.push_back("\t   Fu&LiD\\[0]\\:\\t(.+?)\\t.*");
-        toreturn.push_back("\t   Fay&WunormH\\[0]\\:\\t(.+?)\\t.*");
-        toreturn.push_back("\t  /x' >> $RUNFOLDER/summary.$RUNPREFIX.preseq_mstats.txt");
+  if( mstats_pre ){
+      toreturn.push_back("");
+      toreturn.push_back("\t# CALCULATING POP GENOMICS STATISTICS (pre-sequencing)");
+      std::stringstream ss;
+      toreturn.push_back( "\tsed \"1,2d\" $RUNFOLDER/$RUNPREFIX.replicate$REP.fas \\" );
+      toreturn.push_back( "\t   > $RUNFOLDER/$RUNPREFIX.replicate$REP.fas.pre_mstats.fas" );
+      toreturn.push_back( "\tsed -n \"1,2p\" $RUNFOLDER/$RUNPREFIX.replicate$REP.fas \\" );
+      toreturn.push_back( "\t  >> $RUNFOLDER/$RUNPREFIX.replicate$REP.fas.pre_mstats.fas" );
+      ss << "\t" << daPaths.get_path_mstats() << " -i $RUNFOLDER/$RUNPREFIX.replicate$REP.fas.pre_mstats.fas -f fasta \\" ;
+      toreturn.push_back(ss.str()); ss.str("");
+      toreturn.push_back( "\t  -o 1 -N 2 $(($NUMINDS*2)) 1 -G 1 -p 1 -u 1 | \\");
+      ss << "\t  " << daPaths.get_path_perl() << " -ne 'print '$REP',\"\\t\",$1,\"\\t\",$2,\"\\t\",$3,\"\\t\",$4,\"\\t\",$5,\"\\t\",$6,\"\\t\",$7,\"\\n\"if";
+      toreturn.push_back(ss.str()); ss.str("");
+      toreturn.push_back("\t  /");
+      toreturn.push_back("\t   Eff_length2_pop\\[0]\\:\\t(.+?)\\t.*");
+      toreturn.push_back("\t   S\\[0]\\:\\t(.+?)\\t.*");
+      toreturn.push_back("\t   Theta\\(Wat\\)\\[0]\\:\\t(.+?)\\t.*");
+      toreturn.push_back("\t   Theta\\(Taj\\)\\[0]\\:\\t(.+?)\\t.*");
+      toreturn.push_back("\t   TajimaD\\[0]\\:\\t(.+?)\\t.*");
+      toreturn.push_back("\t   Fu&LiD\\[0]\\:\\t(.+?)\\t.*");
+      toreturn.push_back("\t   Fay&WunormH\\[0]\\:\\t(.+?)\\t.*");
+      toreturn.push_back("\t  /x' >> $RUNFOLDER/summary.$RUNPREFIX.preseq_mstats.txt");
 
 
 
@@ -394,6 +407,9 @@ pipeline_output pipeline::get_cmds (){
       toreturn.push_back("\t\t  -sites $RUNFOLDER/$RUNPREFIX.replicate$REP.Ind$IND.sites \\");
       toreturn.push_back("\t\t  -ref $RUNFOLDER/$RUNPREFIX.replicate$REP.reference.fa \\");
       toreturn.push_back("\t\t  -out $RUNFOLDER/$RUNPREFIX.replicate$REP.fas.mstats_iSNPcall.fas \\");
+      if ( active_snpcall == 0 ){
+          toreturn.push_back("\t\t  -ignoreMA 1 \\");
+        }
       toreturn.push_back("\t\t  -append 1 -names indi$IND -col 1");
       toreturn.push_back("\t\tdone");
       toreturn.push_back("");
@@ -404,7 +420,7 @@ pipeline_output pipeline::get_cmds (){
       toreturn.push_back( "\t  -o 1 -N 2 $NUMINDS 1 -G 1 -p 2 -u 1 | \\");
       //ss << "\t  " << daPaths.get_path_perl() << " -ne 'print $1,\"\\t\",$2,\"\\t\",$3,\"\\t\",$4,\"\\t\",$5,\"\\t\",$6,\"\\t\",$7,\"\\n\"if/Eff_length2_pop\\[0]\\:\\t(.+?)\\t.*S\\[0]\\:\\t(.+?)\\t.*Theta\\(Wat\\)\\[0]\\:\\t(.+?)\\t.*Theta\\(Taj\\)\\[0]\\:\\t(.+?)\\t.*TajimaD\\[0]\\:\\t(.+?)\\t.*Fu&LiD\\[0]\\:\\t(.+?)\\t.*Fay&WunormH\\[0]\\:\\t(.+?)\\t.*/' \\";
 
-       ss << "\t  " << daPaths.get_path_perl() << " -ne 'print '$REP',\"\\t\",$1,\"\\t\",$2,\"\\t\",$3,\"\\t\",$4,\"\\t\",$5,\"\\t\",$6,\"\\t\",$7,\"\\n\"if";
+      ss << "\t  " << daPaths.get_path_perl() << " -ne 'print '$REP',\"\\t\",$1,\"\\t\",$2,\"\\t\",$3,\"\\t\",$4,\"\\t\",$5,\"\\t\",$6,\"\\t\",$7,\"\\n\"if";
       toreturn.push_back(ss.str()); ss.str("");
       toreturn.push_back("\t  /");
       toreturn.push_back("\t   Eff_length2_pop\\[0]\\:\\t(.+?)\\t.*");
@@ -440,11 +456,14 @@ pipeline_output pipeline::get_cmds (){
       toreturn.push_back("\t# CALCULATING POP GENOMICS STATISTICS (mSNPcall)");
       toreturn.push_back("\tfor((IND=1; IND<=$NUMINDS; IND++))");
       toreturn.push_back("\t\tdo");
-      ss << "\t\t" << daPaths.get_path_pipeliner() << " vcf2fas -vcf $RUNFOLDER/$RUNPREFIX.mSNPcall.replicate$REP.Ind$IND.unflt.vcf \\";
+      ss << "\t\t" << daPaths.get_path_pipeliner() << " vcf2fas -vcf $RUNFOLDER/$RUNPREFIX.mSNPcall.replicate$REP.Ind$IND.mSNPcall.flt.vcf \\";
       toreturn.push_back(ss.str()); ss.str("");
       toreturn.push_back("\t\t  -sites $RUNFOLDER/$RUNPREFIX.replicate$REP.Ind$IND.sites \\");
       toreturn.push_back("\t\t  -ref $RUNFOLDER/$RUNPREFIX.replicate$REP.reference.fa \\");
       toreturn.push_back("\t\t  -out $RUNFOLDER/$RUNPREFIX.replicate$REP.fas.mstats_mSNPcall.fas \\");
+      if ( active_snpcall == 0 ){
+          toreturn.push_back("\t\t  -ignoreMA 1 \\");
+        }
       toreturn.push_back("\t\t  -append 1 -names indi$IND -col 1");
       toreturn.push_back("\t\tdone");
       toreturn.push_back("");
@@ -456,16 +475,16 @@ pipeline_output pipeline::get_cmds (){
       //toreturn.push_back( "\t  -o 1 -N 2 $NUMINDS 1 -G 1 -p 2 -u 1 >> $RUNFOLDER/summary.$RUNPREFIX.mstats_mSNPcall.txt" );
       toreturn.push_back( "\t  -o 1 -N 2 $NUMINDS 1 -G 1 -p 2 -u 1 | \\");
       ss << "\t  " << daPaths.get_path_perl() << " -ne 'print '$REP',\"\\t\",$1,\"\\t\",$2,\"\\t\",$3,\"\\t\",$4,\"\\t\",$5,\"\\t\",$6,\"\\t\",$7,\"\\n\"if";
-     toreturn.push_back(ss.str()); ss.str("");
-     toreturn.push_back("\t  /");
-     toreturn.push_back("\t   Eff_length2_pop\\[0]\\:\\t(.+?)\\t.*");
-     toreturn.push_back("\t   S\\[0]\\:\\t(.+?)\\t.*");
-     toreturn.push_back("\t   Theta\\(Wat\\)\\[0]\\:\\t(.+?)\\t.*");
-     toreturn.push_back("\t   Theta\\(Taj\\)\\[0]\\:\\t(.+?)\\t.*");
-     toreturn.push_back("\t   TajimaD\\[0]\\:\\t(.+?)\\t.*");
-     toreturn.push_back("\t   Fu&LiD\\[0]\\:\\t(.+?)\\t.*");
-     toreturn.push_back("\t   Fay&WunormH\\[0]\\:\\t(.+?)\\t.*");
-     toreturn.push_back("\t  /x' >> $RUNFOLDER/summary.$RUNPREFIX.mSNPcall_mstats.txt");
+      toreturn.push_back(ss.str()); ss.str("");
+      toreturn.push_back("\t  /");
+      toreturn.push_back("\t   Eff_length2_pop\\[0]\\:\\t(.+?)\\t.*");
+      toreturn.push_back("\t   S\\[0]\\:\\t(.+?)\\t.*");
+      toreturn.push_back("\t   Theta\\(Wat\\)\\[0]\\:\\t(.+?)\\t.*");
+      toreturn.push_back("\t   Theta\\(Taj\\)\\[0]\\:\\t(.+?)\\t.*");
+      toreturn.push_back("\t   TajimaD\\[0]\\:\\t(.+?)\\t.*");
+      toreturn.push_back("\t   Fu&LiD\\[0]\\:\\t(.+?)\\t.*");
+      toreturn.push_back("\t   Fay&WunormH\\[0]\\:\\t(.+?)\\t.*");
+      toreturn.push_back("\t  /x' >> $RUNFOLDER/summary.$RUNPREFIX.mSNPcall_mstats.txt");
     }
 
   toreturn.push_back("");
@@ -480,16 +499,18 @@ pipeline_output pipeline::get_cmds (){
     toreturn.push_back("\trm $RUNFOLDER/$RUNPREFIX*");
 
   toreturn.push_back("\tdone");
-  toreturn.push_back("# copy summary files");
-  toreturn.push_back("cp $RUNFOLDER/*$RUNPREFIX* $DIRDATA");
 
-  indent_level--;
-  if( daRunSettings.clean_up() ){
-      toreturn.push_back("if [ $REMOVE == 1 ]");
-      toreturn.push_back("\tthen cd $DIRDATA; rm -r $RUNFOLDER; fi");
+  if( (strcmp( daRunSettings.get_dirdata().c_str(), daRunSettings.get_runfolder().c_str() ) != 0) &&  daRunSettings.get_runfolder().length() > 0 ){
+      toreturn.push_back("# copy summary files");
+      toreturn.push_back("cp $RUNFOLDER/*$RUNPREFIX* $DIRDATA");
+
+      indent_level--;
+      if( daRunSettings.clean_up() ){
+          toreturn.push_back("if [ $REMOVE == 1 ]");
+          toreturn.push_back("\tthen cd $DIRDATA; rm -r $RUNFOLDER; fi");
+        }
     }
   toreturn.push_back("");
-
 
   toreturn.push_back("# # PIPELINE FINISHED # #");
   toreturn.push_back("exit 0");

@@ -1,14 +1,10 @@
 //
-//  paths.cpp
 //  pGUI
 //
-//  Copyright (c) 2013 Bruno Nevado. All rights reserved.
+//  Copyright (c) 2013 Bruno Nevado. GNU license
 //
 
 #include "paths.h"
-#include <fstream>
-#include <regex.h>
-
 
 paths::paths(){
   paths_version = "# Pipeliner Paths v1";
@@ -114,6 +110,5 @@ std::vector <std::string > paths::list_paths (){
   out.push_back(path_bash);
   out.push_back(path_mstats);
   out.push_back(path_R);
-
   return out;
 }

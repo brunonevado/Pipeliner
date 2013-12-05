@@ -1,21 +1,10 @@
 //
-//  paths.cpp
 //  pGUI
 //
-//  Copyright (c) 2013 Bruno Nevado. All rights reserved.
+//  Copyright (c) 2013 Bruno Nevado. GNU license
 //
 
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include <QFileDialog>
-#include <QMessageBox>
-#include <QTextStream>
-#include <QRegExpValidator>
-#include <QStringList>
-#include <QList>
-#include <QApplication>
-#include <QStyleFactory>
-#include <stdlib.h>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -27,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
   QApplication::setStyle(QStyleFactory::create("Fusion"));
   man_index = 0;
   man_len = 11;
-  version_info = "<p align=\"center\">Pipeliner GUI v 0.2.0 : 22112013";
+  version_info = "<p align=\"center\">Pipeliner GUI v 0.2.0 : 05122013";
 
 }
 
@@ -43,12 +32,11 @@ void MainWindow::about()
   QString atext = QString::fromStdString(version_info);
 
   atext.append(
-      "<p align=\"center\"><a href=\"https://github.com/brunonevado/pipeliner\"><span style=\" text-decoration: underline; color:#0000ff;\">website</span></a></p><p><a href=\"https://github.com/brunonevado/pipeliner\"><span style=\" text-decoration: underline; color:#0000ff;\"></p>"
-      "Contact: bruno.nevado@cragenomica.es</p>"
-      "<p align=\"center\">This program uses <a href=\"http://qt-project.org/\"><span style=\" text-decoration: underline; color:#0000ff;\">Qt version 5.1.0</span></a></p><p><a href=\"http://qt-project.org/\"><span style=\" text-decoration: underline; color:#0000ff;\"></p>"
+        "<p align=\"center\"><a href=\"https://github.com/brunonevado/pipeliner\"><span style=\" text-decoration: underline; color:#0000ff;\">website</span></a></p><p><a href=\"https://github.com/brunonevado/pipeliner\"><span style=\" text-decoration: underline; color:#0000ff;\"></p>"
+        "Contact: bruno.nevado@cragenomica.es</p>"
+        "<p align=\"center\">This program uses <a href=\"http://qt-project.org/\"><span style=\" text-decoration: underline; color:#0000ff;\">Qt version 5.1.0</span></a></p><p><a href=\"http://qt-project.org/\"><span style=\" text-decoration: underline; color:#0000ff;\"></p>"
         );
-  QMessageBox::about(this, tr("About Pipeliner GUI"), atext
-                     );
+  QMessageBox::about(this, tr("About Pipeliner GUI"), atext);
 
 }
 
@@ -58,7 +46,6 @@ void MainWindow::setupHelpMenu()
   menuBar()->addMenu(helpMenu);
 
   helpMenu->addAction(tr("&About PipelinerGUI"), this, SLOT(about()));
-  // helpMenu->addAction(tr("About &Qt"), qApp, SLOT(aboutQt()));
 }
 
 
@@ -74,15 +61,26 @@ void MainWindow::on_pushButton_WriteBash_clicked()
   // check picard tools does not have a dash at end
   if( lpaths.at(7).at( lpaths.at(7).size() - 1 ) == '/'){
       lpaths.at(7).erase( lpaths.at(7).size() - 1 );
-
     }
-
-
   pointer_to_pipeline->daPaths.set_paths(lpaths);
 
   highlighter_bash->set_bash( pointer_to_pipeline->daPaths );
 
   // Update User-defined toobs if needed
+  // here check that BigScreen is not selected - if it is, update smallScreens
+  if(ui->stackedWidget_snpcall->currentIndex() == 2){
+      ui->plainTextEdit_user_iSNP->clear();
+      ui->plainTextEdit_user_iSNP->appendPlainText( ui->plainTextEdit_user_iSNPcall_bigScreen->toPlainText() );
+    }
+  if(ui->stackedWidget_snpcall->currentIndex() == 3){
+      ui->plainTextEdit_user_mSNP->clear();
+      ui->plainTextEdit_user_mSNP->appendPlainText( ui->plainTextEdit_user_mSNPcall_bigScreen->toPlainText() );
+    }
+  if(ui->stackedWidget_snpcall->currentIndex() == 4){
+      ui->plainTextEdit_user_snp_sites->clear();
+      ui->plainTextEdit_user_snp_sites->appendPlainText( ui->plainTextEdit_user_sites_bigScreen->toPlainText() );
+    }
+
   if( pointer_to_pipeline->get_active_input() == 2 ){
       std::vector < std::string > user_in;
       QString user_input_contents = ui->plainTextEdit_user_input->toPlainText();
@@ -120,7 +118,7 @@ void MainWindow::on_pushButton_WriteBash_clicked()
         }
       pointer_to_pipeline->daSnpcallUser.set_user_snp_iSNP( vector_cmds );
       vector_cmds.clear(); contents.clear(); in_lines.clear();
-      //
+
       contents = ui->plainTextEdit_user_mSNP->toPlainText();
       in_lines = contents.split("\n");
       for ( int i = 0; i < in_lines.size(); i++ ){
@@ -128,7 +126,7 @@ void MainWindow::on_pushButton_WriteBash_clicked()
         }
       pointer_to_pipeline->daSnpcallUser.set_user_snp_mSNP( vector_cmds );
       vector_cmds.clear(); contents.clear(); in_lines.clear();
-      //
+
       contents = ui->plainTextEdit_user_snp_sites->toPlainText();
       in_lines = contents.split("\n");
       for ( int i = 0; i < in_lines.size(); i++ ){
@@ -151,7 +149,6 @@ void MainWindow::on_pushButton_WriteBash_clicked()
           errtext.append("\n");
         }
 
-
       QMessageBox msgBox;
 
       msgBox.setText("Errors in defined pipeline.");
@@ -160,8 +157,6 @@ void MainWindow::on_pushButton_WriteBash_clicked()
       msgBox.setInformativeText(errtext.c_str());
       msgBox.setWindowModality(Qt::WindowModal);
       msgBox.exec();
-
-      //QMessageBox::critical(this, tr("Errors in pipeline:"), errtext.c_str());
 
     }
 }
@@ -298,7 +293,6 @@ void MainWindow::setDefaults(){
   ui->spinBox_art_fraglen->setValue( pointer_to_pipeline->daNgsArt.get_fraglen() );
   ui->spinBox_art_fragsd->setValue( pointer_to_pipeline->daNgsArt.get_fragsd() );
 
-
   // alignment
   switch ( pointer_to_pipeline->get_active_aligner() ){
     case 0:
@@ -326,7 +320,6 @@ void MainWindow::setDefaults(){
   // user-defined alignment
   ui->checkBox_user_align_createDict->setChecked( pointer_to_pipeline->daAlignUser.get_creatDict() );
 
-
   // SNP call
   switch ( pointer_to_pipeline->get_active_snpcall() ){
     case 0:
@@ -347,7 +340,7 @@ void MainWindow::setDefaults(){
   ui->spinBox_sam_mindep->setValue( pointer_to_pipeline->daSnpcallSamtools.get_mincov() );
   ui->spinBox_sam_minrms->setValue( pointer_to_pipeline->daSnpcallSamtools.get_minrms() );
   ui->spinBox_sam_maxdep->setValue( pointer_to_pipeline->daSnpcallSamtools.get_maxcov() );
-
+  ui->spinBox_sam_minmapq->setValue( pointer_to_pipeline->daSnpcallSamtools.get_mapq() );
   ui->checkBox_snpcall_user_iSNP->setChecked( pointer_to_pipeline->daSnpcallUser.get_iSNPcall() );
   ui->checkBox_snpcall_user_mSNP->setChecked( pointer_to_pipeline->daSnpcallUser.get_mSNPcall() );
   ui->lineEdit_user_snp_mSNPsep->setText( QString::fromStdString( pointer_to_pipeline->daSnpcallUser.get_bam_sep() ) );
@@ -422,6 +415,12 @@ void MainWindow::setDefaults(){
     }
   highlighter_user_snp_iSNP->apply();
 
+  highlighter_user_snp_iSNP_bigScreen = new Highlighter( ui->plainTextEdit_user_iSNPcall_bigScreen->document());
+  for( unsigned int i = 0; i < k_iSNP.size(); i++ ){
+      highlighter_user_snp_iSNP_bigScreen->add_keyword(k_iSNP.at(i));
+    }
+  highlighter_user_snp_iSNP_bigScreen->apply();
+
   highlighter_user_snp_mSNP = new Highlighter( ui->plainTextEdit_user_mSNP->document());
   std::vector < std::string > k_mSNP = pointer_to_pipeline->daSnpcallUser.get_keywords_mult();
   for( unsigned int i = 0; i < k_mSNP.size(); i++ ){
@@ -429,12 +428,24 @@ void MainWindow::setDefaults(){
     }
   highlighter_user_snp_mSNP->apply();
 
+  highlighter_user_snp_mSNP_bigScreen = new Highlighter( ui->plainTextEdit_user_mSNPcall_bigScreen->document());
+  for( unsigned int i = 0; i < k_mSNP.size(); i++ ){
+      highlighter_user_snp_mSNP_bigScreen->add_keyword(k_mSNP.at(i));
+    }
+  highlighter_user_snp_mSNP_bigScreen->apply();
+
   highlighter_user_snp_sites = new Highlighter( ui->plainTextEdit_user_snp_sites->document());
   std::vector < std::string > k_snp_sites = pointer_to_pipeline->daSnpcallUser.get_keywords_sites();
   for( unsigned int i = 0; i < k_snp_sites.size(); i++ ){
       highlighter_user_snp_sites->add_keyword(k_snp_sites.at(i));
     }
   highlighter_user_snp_sites->apply();
+
+  highlighter_user_snp_sites_bigScreen = new Highlighter( ui->plainTextEdit_user_sites_bigScreen->document());
+  for( unsigned int i = 0; i < k_snp_sites.size(); i++ ){
+      highlighter_user_snp_sites_bigScreen->add_keyword(k_snp_sites.at(i));
+    }
+  highlighter_user_snp_sites_bigScreen->apply();
 
   highlighter_bash = new Highlighter( ui->plainTextEdit_bash->document());
   highlighter_bash->set_bash( pointer_to_pipeline->daPaths );
@@ -453,6 +464,9 @@ void MainWindow::setDefaults(){
   ui->plainTextEdit_user_mSNP->setFont(f);
   ui->plainTextEdit_user_ngs->setFont(f);
   ui->plainTextEdit_user_snp_sites->setFont(f);
+  ui->plainTextEdit_user_iSNPcall_bigScreen->setFont(f);
+  ui->plainTextEdit_user_mSNPcall_bigScreen->setFont(f);
+  ui->plainTextEdit_user_sites_bigScreen->setFont(f);
 
   // help
   ui->horizontalSlider_tutorial->setMaximum(man_len);
@@ -471,6 +485,8 @@ void MainWindow::setDefaults(){
   iBrowse = QIcon(":/icons/icons/ffile.ico");
   iOpenFolder = QIcon(":/icons/icons/ffolder.png");
   iInfo = QIcon(":/icons/icons/info.ico");
+  iFullScreen =  QIcon(":/icons/icons/fullscreen.ico");
+  iRun = QIcon(":/icons/icons/gnome_run.ico");
   iWrite = QIcon(":/icons/icons/write.ico");
   iTrash = QIcon(":/icons/icons/delete.png");
   iUp = QIcon(":/icons/icons/up.ico");
@@ -481,6 +497,13 @@ void MainWindow::setDefaults(){
   iAddFile = QIcon(":/icons/icons/addFile.ico");
   iDelFile = QIcon(":/icons/icons/delFile.png");
   iOpenFile = QIcon(":/icons/icons/browse.ico");
+  ui->pushButton_runLocally->setIcon(iRun);
+  ui->pushButton_user_iSNPcall_bigScreen->setIcon(iFullScreen);
+  ui->pushButton_user_mSNPcall_bigScreen->setIcon(iFullScreen);
+  ui->pushButton_user_sites_bigScreen->setIcon(iFullScreen);
+  ui->pushButton_user_iSNPcall_BigScreen_close->setIcon(iDown);
+  ui->pushButton_user_mSNPcall_BigScreen_close->setIcon(iDown);
+  ui->pushButton_user_sites_BigScreen_close->setIcon(iDown);
   ui->pushButtonSaveBash->setIcon(iSaveFile);
   ui->pushButton_clearBashHeader->setIcon(iTrash);
   ui->pushButton_dirdata->setIcon(iOpenFolder);
@@ -531,14 +554,12 @@ void MainWindow::setDefaults(){
   ui->pushButton_viewer_up_sum_2->setIcon(iUp);
   ui->pushButton_WriteBash->setIcon(iWrite);
   ui->pushButton_plots_work->setIcon(iPlot);
-
   ui->horizontalSlider_tutorial->setEnabled(false);
-
 }
 
 void MainWindow::on_pushButton_loadHeader_clicked()
 {
-ui->plainTextEdit_bash->showMaximized();
+  ui->plainTextEdit_bash->showMaximized();
   QString fileName = QFileDialog::getOpenFileName(this, tr("Choose header file"), QString());
   if (!fileName.isEmpty()) {
       pointer_to_pipeline->set_bash_header( fileName.toStdString().c_str() );
@@ -547,9 +568,7 @@ ui->plainTextEdit_bash->showMaximized();
           ui->lineEdit_bashHeader->clear();
           ui->lineEdit_bashHeader->setPlaceholderText("Path to file should not contain empty spaces");
           pointer_to_pipeline->set_bash_header( "" );
-
         }
-
     }
 }
 
@@ -586,23 +605,17 @@ void MainWindow::on_pushButton_runfolder_clicked()
           ui->lineEdit_runfolder->clear();
           ui->lineEdit_runfolder->setPlaceholderText("Path to folder should not contain empty spaces");
         }
-
-
     }
 }
 
 void MainWindow::on_lineEdit_runprefix_textChanged(const QString &arg1)
 {
   pointer_to_pipeline->daRunSettings.set_runprefix(arg1.toStdString().c_str());
-
 }
 
-
-
-void  MainWindow::on_spinBox_nreps_valueChanged(int arg1){
-
+void  MainWindow::on_spinBox_nreps_valueChanged(int arg1)
+{
   pointer_to_pipeline->daRunSettings.set_numreps( arg1 );
-
 }
 
 
@@ -614,7 +627,6 @@ void MainWindow::on_checkBox_dirty_stateChanged()
     pointer_to_pipeline->daRunSettings.set_clean(false);
   else
     pointer_to_pipeline->daRunSettings.set_clean(true);
-
 }
 
 void MainWindow::on_actionPreview_Bash_triggered()
@@ -659,13 +671,11 @@ void MainWindow::on_doubleSpinBox_ms_theta_valueChanged(double arg1)
 void MainWindow::on_doubleSpinBox_ms_rho_valueChanged(double arg1)
 {
   pointer_to_pipeline->daInputMs.set_rho( float( arg1 ) );
-
 }
 
 void MainWindow::on_doubleSpinBox_ms_stime_valueChanged(double arg1)
 {
   pointer_to_pipeline->daInputMs.set_split_time( float( arg1 ) );
-
 }
 
 void MainWindow::on_radioButton_ms_userandom_clicked()
@@ -675,7 +685,6 @@ void MainWindow::on_radioButton_ms_userandom_clicked()
   ui->lineEdit_ms_ancestralfile->setEnabled( false );
   ui->pushButton_ms_findancestral->setEnabled( false );
   ui->spinBox_ms_seqlen->setFocus();
-
 }
 
 void MainWindow::on_radioButton_ms_usefasta_clicked()
@@ -684,7 +693,6 @@ void MainWindow::on_radioButton_ms_usefasta_clicked()
   ui->spinBox_ms_seqlen->setEnabled( false );
   ui->lineEdit_ms_ancestralfile->setEnabled( true );
   ui->pushButton_ms_findancestral->setEnabled( true );
-
   ui->lineEdit_ms_ancestralfile->setFocus();
 }
 
@@ -695,9 +703,7 @@ void MainWindow::on_spinBox_ms_seqlen_valueChanged(int arg1)
 
 void MainWindow::on_lineEdit_ms_ancestralfile_textChanged(const QString &arg1)
 {
-
   pointer_to_pipeline->daInputMs.set_ancestral_file( arg1.toStdString().c_str());
-
 }
 
 void MainWindow::on_lineEdit_sfs_infile_textChanged(const QString &arg1)
@@ -708,13 +714,11 @@ void MainWindow::on_lineEdit_sfs_infile_textChanged(const QString &arg1)
 void MainWindow::on_spinBox_sfs_npops_valueChanged(int arg1)
 {
   pointer_to_pipeline->daInputSfscode.set_numpops( arg1 );
-
 }
 
 void MainWindow::on_spinBox_sfs_popsize_valueChanged(int arg1)
 {
   pointer_to_pipeline->daInputSfscode.set_numindsppop( arg1 );
-
 }
 
 void MainWindow::on_spinBox_sfs_ninds_valueChanged(int arg1)
@@ -726,7 +730,6 @@ void MainWindow::on_spinBox_sfs_ninds_valueChanged(int arg1)
 void MainWindow::on_spinBox_user_ninds_valueChanged(int arg1)
 {
   pointer_to_pipeline->daRunSettings.set_numinds( arg1 );
-
 }
 
 
@@ -744,7 +747,6 @@ void MainWindow::on_radioButton_ngs_art_clicked()
 {
   pointer_to_pipeline->set_active_ngs(0);
   ui->stackedWidget_ngs->setCurrentIndex(0);
-
 }
 void MainWindow::on_radioButton_ngs_user_clicked()
 {
@@ -781,7 +783,6 @@ void MainWindow::on_spinBox_art_fragsd_valueChanged(int arg1)
   pointer_to_pipeline->daNgsArt.set_fragsd( arg1 );
 }
 
-
 void MainWindow::on_radioButton_bwa_se_clicked()
 {
   pointer_to_pipeline->daAlignmentBwa.set_num_ends(1);
@@ -807,7 +808,6 @@ void MainWindow::on_spinBox_bwa_np_valueChanged(int arg1)
   pointer_to_pipeline->daAlignmentBwa.set_nt( arg1 );
 }
 
-
 void MainWindow::on_checkBox_bwa_rmdup_stateChanged()
 {
   bool rm = ui->checkBox_bwa_rmdup->isChecked();
@@ -829,7 +829,6 @@ void MainWindow::on_radioButton_snp_user_clicked()
 {
   pointer_to_pipeline->set_active_snpcall( 1 );
   ui->stackedWidget_snpcall->setCurrentIndex( 1 );
-
 }
 
 void MainWindow::on_checkBox_sam_mSNPcall_stateChanged()
@@ -840,14 +839,12 @@ void MainWindow::on_checkBox_sam_mSNPcall_stateChanged()
 void MainWindow::on_checkBox_sam_iSNPcall_stateChanged()
 {
   pointer_to_pipeline->daSnpcallSamtools.set_iSNPcall( ui->checkBox_sam_iSNPcall->isChecked() );
-
 }
 
 void MainWindow::on_checkBox_sam_disbaq_stateChanged()
 {
   pointer_to_pipeline->daSnpcallSamtools.set_baq( ui->checkBox_sam_disbaq->isChecked() );
 }
-
 
 void MainWindow::on_spinBox_sam_minbaseq_valueChanged(int arg1)
 {
@@ -874,10 +871,7 @@ void MainWindow::SavePaths() {
   for( int i = 0; i < ui->tableWidget_paths->rowCount(); i++ )
     lpaths.push_back(ui->tableWidget_paths->item(i,0)->text().toStdString().c_str());
   pointer_to_pipeline->daPaths.set_paths(lpaths);
-
-
   QString fileName = QFileDialog::getSaveFileName(this, "Choose file to save paths", "pipeliner.paths", "Path files (*.paths);;All files (*)");
-
   if (!fileName.isEmpty()) {
       QFile file(fileName);
       if (!file.open(QIODevice::WriteOnly)) {
@@ -893,17 +887,13 @@ void MainWindow::SavePaths() {
               msgBox.setText("Unable to write to selected file.");
               msgBox.setIcon(QMessageBox::Critical);
               msgBox.exec();
-
-
             }
         }
     }
-
 }
 
 void MainWindow::LoadPaths(){
   QString fileName = QFileDialog::getOpenFileName(this, "Choose paths file to read", "pipeliner.paths", "Path files (*.paths);;All files (*)" );
-
   if (!fileName.isEmpty()) {
       QFile file(fileName);
       if (!file.open(QIODevice::ReadOnly)) {
@@ -919,7 +909,6 @@ void MainWindow::LoadPaths(){
               msgBox.setText(QString( msg.c_str()) );
               msgBox.setIcon(QMessageBox::Critical);
               msgBox.exec();
-
             }
           else{
               ui->tableWidget_paths->item(0,0)->setText(QString::fromStdString(pointer_to_pipeline->daPaths.get_path_ms().c_str() )      );;
@@ -939,7 +928,6 @@ void MainWindow::LoadPaths(){
         }
       ui->tabWidget_main->setCurrentWidget( ui->tab_run_settings );
     }
-
 }
 
 void MainWindow::on_actionSave_Paths_triggered()
@@ -952,7 +940,6 @@ void MainWindow::on_actionLoad_paths_triggered()
   MainWindow::LoadPaths();
 }
 
-
 void MainWindow::on_pushButton_loadPaths_clicked()
 {
   MainWindow::LoadPaths();
@@ -963,20 +950,16 @@ void MainWindow::on_pushButton_savePaths_clicked()
   MainWindow::SavePaths();
 }
 
-
-
 void MainWindow::on_radioButton_align_bwa_clicked()
 {
   pointer_to_pipeline->set_active_aligner(0);
   ui->stackedWidget_alignment->setCurrentIndex(0);
 }
 
-
 void MainWindow::on_radioButton_align_user_clicked()
 {
   pointer_to_pipeline->set_active_aligner(1);
   ui->stackedWidget_alignment->setCurrentIndex(1);
-
 }
 
 void MainWindow::on_pushButton_ms_findancestral_clicked()
@@ -991,7 +974,6 @@ void MainWindow::on_pushButton_ms_findancestral_clicked()
       ui->lineEdit_ms_ancestralfile->setPlaceholderText("No empty spaces allowed in path to file");
       pointer_to_pipeline->daInputMs.set_ancestral_file( "" );
     }
-
 }
 
 void MainWindow::on_pushButton_sfs_infile_clicked()
@@ -1009,10 +991,8 @@ void MainWindow::on_pushButton_sfs_infile_clicked()
 }
 
 
-void MainWindow::SaveBash () {
-
+QString MainWindow::SaveBash () {
   QString str = ui->plainTextEdit_bash->toPlainText();
-
   if( str.length() == 0 ){
       QMessageBox msgBox;
       msgBox.setText( "Bash text is empty, use 'Write Bash commands' before saving " );
@@ -1022,7 +1002,6 @@ void MainWindow::SaveBash () {
   else{
       QString fileName = QFileDialog::getSaveFileName(this, tr("Save Bash file"), QString::fromStdString( "run_" + pointer_to_pipeline->daRunSettings.get_runprefix()),
                                                       "Bash files (*.sh);;All files (*)");
-
       if (!fileName.isEmpty()) {
           QFile file(fileName);
           if (!file.open(QIODevice::WriteOnly)) {
@@ -1036,35 +1015,28 @@ void MainWindow::SaveBash () {
               stream << ui->plainTextEdit_bash->toPlainText();
               stream.flush();
               file.close();
+              return fileName;
             }
         }
-
-
     }
-
-
+  return "err";
 }
 
 
 void MainWindow::on_pushButtonSaveBash_clicked()
 {
-  MainWindow::SaveBash();
-
-
+  QString bfile = MainWindow::SaveBash();
 }
 
 void MainWindow::on_actionSave_Bash_file_triggered()
 {
-  MainWindow::SaveBash();
-
+  QString bfile = MainWindow::SaveBash();
 }
 
 
 
 void MainWindow::set_input_constrains(){
-
   QRegExp rx_nospaces("^\\S+$");
-
   QValidator *validator = new QRegExpValidator(rx_nospaces, this);
   ui->lineEdit_dirdata->setValidator(validator);
   ui->lineEdit_runfolder->setValidator(validator);
@@ -1076,36 +1048,29 @@ void MainWindow::set_input_constrains(){
   ui->lineEdit_plot_saveTofile->setValidator(validator);
 }
 
-
-
 void MainWindow::on_pushButton_load_user_input_clicked()
 {
   QString fileName = QFileDialog::getOpenFileName(this, tr("Choose user-defined input file"), QString(), "Toob files (*.toob);;All files (*)");
   if (!fileName.isEmpty()) {
-
-
       QFile file(fileName);
       if (!file.open(QIODevice::ReadOnly)) {
           QMessageBox msgBox;
           msgBox.setText("Unable to read from selected file.");
           msgBox.setIcon(QMessageBox::Critical);
           msgBox.exec();
-        } else {
+        }
+      else {
           ui->plainTextEdit_user_input->clear();
           QTextStream in(&file);
           ui->plainTextEdit_user_input->appendPlainText(in.readAll());
           file.close();
         }
-
-
     }
-
 }
 
 void MainWindow::on_pushButton_save_user_input_clicked()
 {
   QString str = ui->plainTextEdit_user_input->toPlainText();
-
   if( str.length() == 0 ){
       QMessageBox msgBox;
       msgBox.setText( "User-defined input text is empty" );
@@ -1115,7 +1080,6 @@ void MainWindow::on_pushButton_save_user_input_clicked()
   else{
       QString fileName = QFileDialog::getSaveFileName(this, tr("Save user-defined input file"), "input",
                                                       "Toob files (*.toob);;All files (*)");
-
       if (!fileName.isEmpty()) {
           QFile file(fileName);
           if (!file.open(QIODevice::WriteOnly)) {
@@ -1144,7 +1108,6 @@ void MainWindow::on_radioButton_in_user_ms_clicked()
 {
   pointer_to_pipeline->daInputUser.set_format_ms( true );
   ui->groupBox_input_user_msinoptions->setEnabled( true );
-
 }
 
 void MainWindow::on_radioButton_user_userandom_clicked()
@@ -1154,7 +1117,6 @@ void MainWindow::on_radioButton_user_userandom_clicked()
   ui->lineEdit_user_ancestralfile->setEnabled( false );
   ui->pushButton_user_findancestral->setEnabled( false );
   ui->spinBox_user_seqlen->setFocus();
-
 }
 
 void MainWindow::on_radioButton_user_usefastaancestral_clicked()
@@ -1163,7 +1125,6 @@ void MainWindow::on_radioButton_user_usefastaancestral_clicked()
   ui->spinBox_user_seqlen->setEnabled( false );
   ui->lineEdit_user_ancestralfile->setEnabled( true );
   ui->pushButton_user_findancestral->setEnabled( true );
-
   ui->lineEdit_user_ancestralfile->setFocus();
 }
 
@@ -1195,8 +1156,6 @@ void MainWindow::on_pushButton_load_user_ngs_clicked()
 {
   QString fileName = QFileDialog::getOpenFileName(this, tr("Choose user-defined ngs file"), QString(), "Toob files (*.toob);;All files (*)");
   if (!fileName.isEmpty()) {
-
-
       QFile file(fileName);
       if (!file.open(QIODevice::ReadOnly)) {
           QMessageBox msgBox;
@@ -1209,15 +1168,12 @@ void MainWindow::on_pushButton_load_user_ngs_clicked()
           ui->plainTextEdit_user_ngs->appendPlainText(in.readAll());
           file.close();
         }
-
-
     }
 }
 
 void MainWindow::on_pushButton_save_user_ngs_clicked()
 {
   QString str = ui->plainTextEdit_user_ngs->toPlainText();
-
   if( str.length() == 0 ){
       QMessageBox msgBox;
       msgBox.setText( "User-defined ngs text is empty" );
@@ -1227,7 +1183,6 @@ void MainWindow::on_pushButton_save_user_ngs_clicked()
   else{
       QString fileName = QFileDialog::getSaveFileName(this, tr("Save user-defined ngs file"), "ngs_sim",
                                                       "Toob files (*.toob);;All files (*)");
-
       if (!fileName.isEmpty()) {
           QFile file(fileName);
           if (!file.open(QIODevice::WriteOnly)) {
@@ -1244,16 +1199,12 @@ void MainWindow::on_pushButton_save_user_ngs_clicked()
             }
         }
     }
-
-
 }
 
 void MainWindow::on_pushButton_load_user_align_clicked()
 {
   QString fileName = QFileDialog::getOpenFileName(this, tr("Choose user-defined alignment file"), QString(), "Toob files (*.toob);;All files (*)");
   if (!fileName.isEmpty()) {
-
-
       QFile file(fileName);
       if (!file.open(QIODevice::ReadOnly)) {
           QMessageBox msgBox;
@@ -1266,15 +1217,12 @@ void MainWindow::on_pushButton_load_user_align_clicked()
           ui->plainTextEdit_user_align->appendPlainText(in.readAll());
           file.close();
         }
-
-
     }
 }
 
 void MainWindow::on_pushButton_save_user_align_clicked()
 {
   QString str = ui->plainTextEdit_user_align->toPlainText();
-
   if( str.length() == 0 ){
       QMessageBox msgBox;
       msgBox.setText( "User-defined alignment text is empty" );
@@ -1284,7 +1232,6 @@ void MainWindow::on_pushButton_save_user_align_clicked()
   else{
       QString fileName = QFileDialog::getSaveFileName(this, tr("Save user-defined alignment file"), "alignment",
                                                       "Toob files (*.toob);;All files (*)");
-
       if (!fileName.isEmpty()) {
           QFile file(fileName);
           if (!file.open(QIODevice::WriteOnly)) {
@@ -1301,9 +1248,6 @@ void MainWindow::on_pushButton_save_user_align_clicked()
             }
         }
     }
-
-
-
 }
 
 
@@ -1311,8 +1255,6 @@ void MainWindow::on_pushButton_load_user_iSNP_clicked()
 {
   QString fileName = QFileDialog::getOpenFileName(this, tr("Choose user-defined iSNPcall file"), QString(), "Toob files (*.toob);;All files (*)");
   if (!fileName.isEmpty()) {
-
-
       QFile file(fileName);
       if (!file.open(QIODevice::ReadOnly)) {
           QMessageBox msgBox;
@@ -1331,7 +1273,6 @@ void MainWindow::on_pushButton_load_user_iSNP_clicked()
 void MainWindow::on_pushButton_save_user_iSNP_clicked()
 {
   QString str = ui->plainTextEdit_user_iSNP->toPlainText();
-
   if( str.length() == 0 ){
       QMessageBox msgBox;
       msgBox.setText( "User-defined iSNPcall text is empty" );
@@ -1341,7 +1282,6 @@ void MainWindow::on_pushButton_save_user_iSNP_clicked()
   else{
       QString fileName = QFileDialog::getSaveFileName(this, tr(" user-defined iSNPcall file"), "iSNPcall",
                                                       "Toob files (*.toob);;All files (*)");
-
       if (!fileName.isEmpty()) {
           QFile file(fileName);
           if (!file.open(QIODevice::WriteOnly)) {
@@ -1358,7 +1298,6 @@ void MainWindow::on_pushButton_save_user_iSNP_clicked()
             }
         }
     }
-
 }
 
 
@@ -1366,8 +1305,6 @@ void MainWindow::on_pushButton_load_user_mSNP_clicked()
 {
   QString fileName = QFileDialog::getOpenFileName(this, tr("Choose user-defined mSNPcall file"), QString(), "Toob files (*.toob);;All files (*)");
   if (!fileName.isEmpty()) {
-
-
       QFile file(fileName);
       if (!file.open(QIODevice::ReadOnly)) {
           QMessageBox msgBox;
@@ -1386,7 +1323,6 @@ void MainWindow::on_pushButton_load_user_mSNP_clicked()
 void MainWindow::on_pushButton_save_user_mSNP_clicked()
 {
   QString str = ui->plainTextEdit_user_mSNP->toPlainText();
-
   if( str.length() == 0 ){
       QMessageBox msgBox;
       msgBox.setText( "User-defined mSNPcall text is empty" );
@@ -1396,7 +1332,6 @@ void MainWindow::on_pushButton_save_user_mSNP_clicked()
   else{
       QString fileName = QFileDialog::getSaveFileName(this, tr("Save user-defined mSNPcall file"), "mSNPcall",
                                                       "Toob files (*.toob);;All files (*)");
-
       if (!fileName.isEmpty()) {
           QFile file(fileName);
           if (!file.open(QIODevice::WriteOnly)) {
@@ -1413,15 +1348,12 @@ void MainWindow::on_pushButton_save_user_mSNP_clicked()
             }
         }
     }
-
 }
 
 void MainWindow::on_pushButton_load_user_snp_sites_clicked()
 {
   QString fileName = QFileDialog::getOpenFileName(this, tr("Choose user-defined sites file"), QString(), "Toob files (*.toob);;All files (*)");
   if (!fileName.isEmpty()) {
-
-
       QFile file(fileName);
       if (!file.open(QIODevice::ReadOnly)) {
           QMessageBox msgBox;
@@ -1440,7 +1372,6 @@ void MainWindow::on_pushButton_load_user_snp_sites_clicked()
 void MainWindow::on_pushButton_save_user_snp_sites_clicked()
 {
   QString str = ui->plainTextEdit_user_snp_sites->toPlainText();
-
   if( str.length() == 0 ){
       QMessageBox msgBox;
       msgBox.setText( "User-defined sites text is empty" );
@@ -1450,7 +1381,6 @@ void MainWindow::on_pushButton_save_user_snp_sites_clicked()
   else{
       QString fileName = QFileDialog::getSaveFileName(this, tr("Save user-defined sites file"), "sites",
                                                       "Toob files (*.toob);;All files (*)");
-
       if (!fileName.isEmpty()) {
           QFile file(fileName);
           if (!file.open(QIODevice::WriteOnly)) {
@@ -1467,7 +1397,6 @@ void MainWindow::on_pushButton_save_user_snp_sites_clicked()
             }
         }
     }
-
 }
 
 void MainWindow::on_checkBox_snpcall_user_iSNP_clicked(bool checked)
@@ -1478,13 +1407,11 @@ void MainWindow::on_checkBox_snpcall_user_iSNP_clicked(bool checked)
 void MainWindow::on_checkBox_snpcall_user_mSNP_clicked(bool checked)
 {
   pointer_to_pipeline->daSnpcallUser.set_mSNPcall( checked );
-
 }
 
 void MainWindow::on_lineEdit_user_snp_mSNPsep_textChanged(const QString &arg1)
 {
   pointer_to_pipeline->daSnpcallUser.set_bam_sep(arg1.toStdString().c_str());
-
 }
 
 void MainWindow::on_spinBox_user_snp_sitescol_valueChanged(int arg1)
@@ -1495,7 +1422,6 @@ void MainWindow::on_spinBox_user_snp_sitescol_valueChanged(int arg1)
 void MainWindow::on_checkBox_stats_sum_iSNPcall_clicked(bool checked)
 {
   pointer_to_pipeline->set_sum_iSNPcall( checked );
-
   if( checked ){
       ui->checkBox_stats_err_iSNPcall->setEnabled( checked );
     }
@@ -1515,7 +1441,6 @@ void MainWindow::on_checkBox_stats_sum_mSNPcall_clicked(bool checked)
       pointer_to_pipeline->set_inspect_mSNPcall( checked );
       ui->checkBox_stats_err_mSNPcall->setEnabled( checked );
     }
-
 }
 
 void MainWindow::on_checkBox_stats_err_iSNPcall_clicked(bool checked)
@@ -1526,7 +1451,6 @@ void MainWindow::on_checkBox_stats_err_iSNPcall_clicked(bool checked)
 void MainWindow::on_checkBox_stats_err_mSNPcall_clicked(bool checked)
 {
   pointer_to_pipeline->set_inspect_mSNPcall( checked );
-
 }
 
 void MainWindow::on_spinBox_stats_err_offsetQuals_valueChanged(int arg1)
@@ -1542,19 +1466,16 @@ void MainWindow::on_checkBox_stats_mstats_iSNP_clicked(bool checked)
 void MainWindow::on_checkBox_stats_mstats_mSNP_clicked(bool checked)
 {
   pointer_to_pipeline->set_mstats_mSNPcall( checked );
-
 }
 
 void MainWindow::on_checkBox_stats_mstats_pre_clicked(bool checked)
 {
   pointer_to_pipeline->set_mstats_preseq( checked );
-
 }
 
 void MainWindow::on_pushButton_viewer_add_sum_clicked()
 {
   QStringList fileNames = QFileDialog::getOpenFileNames(this, tr("Choose summary file(s) to add"), QString(), "Summary files (*.*SNPcall.txt);;All files (*)");
-
   if (!fileNames.isEmpty()) {
       for( int i = 0; i < ui->tableWidget_viewer_sum->rowCount(); i++ ){
           if( ui->tableWidget_viewer_sum->item(i,1)->text().isEmpty() ){
@@ -1562,7 +1483,7 @@ void MainWindow::on_pushButton_viewer_add_sum_clicked()
               fileNames.pop_front();
               if( fileNames.size() == 0)
                 break;
-              }
+            }
         }
       if(fileNames.size() != 0 ){
           QMessageBox msgBox;
@@ -1573,31 +1494,6 @@ void MainWindow::on_pushButton_viewer_add_sum_clicked()
     }
   ui->tableWidget_viewer_sum->resizeColumnToContents(1);
 }
-
-/* single file add working
-void MainWindow::on_pushButton_viewer_add_sum_clicked()
-{
-  QString fileName = QFileDialog::getOpenFileName(this, tr("Choose summary file to add"), QString(), "Summary files (*.*SNPcall.txt);;All files (*)");
-  if (!fileName.isEmpty()) {
-      bool fits = false;
-      for( int i = 0; i < ui->tableWidget_viewer_sum->rowCount(); i++ ){
-          if( ui->tableWidget_viewer_sum->item(i,1)->text().isEmpty() ){
-              ui->tableWidget_viewer_sum->item(i,1)->setText(fileName);
-              fits=true;
-              break;
-            }
-        }
-      if(!fits){
-          QMessageBox msgBox;
-          msgBox.setText("Too many files to plot (maximum is 20 files).");
-          msgBox.setIcon(QMessageBox::Critical);
-          msgBox.exec();
-        }
-    }
-  ui->tableWidget_viewer_sum->resizeColumnToContents(1);
-}
-*/
-
 
 void MainWindow::on_pushButton_viewer_del_sum_clicked()
 {
@@ -1610,9 +1506,7 @@ void MainWindow::on_pushButton_viewer_del_sum_clicked()
           ui->tableWidget_viewer_sum->item(i,1)->setText(  ui->tableWidget_viewer_sum->item(i+1,1)->text() );
           ui->tableWidget_viewer_sum->item(i+1,1)->setText("");
         }
-
     }
-
 }
 
 void MainWindow::on_pushButton_viewer_up_sum_clicked()
@@ -1635,7 +1529,6 @@ void MainWindow::on_pushButton_viewer_down_sum_clicked()
       ui->tableWidget_viewer_sum->item(x,1)->setText(  swap );
       ui->tableWidget_viewer_sum->setCurrentCell(x+1, 1);
     }
-
 }
 
 
@@ -1646,7 +1539,6 @@ void MainWindow::on_pushButton_viewer_down_sum_clicked()
 void MainWindow::on_pushButton_viewer_add_sum_2_clicked()
 {
   QStringList fileNames = QFileDialog::getOpenFileNames(this, tr("Choose mstats summary file(s) to add"), QString(), "mstasts sum files (*.*_mstats.txt);;All files (*)");
-
   if (!fileNames.isEmpty()) {
       for( int i = 0; i < ui->tableWidget_viewer_sum_2->rowCount(); i++ ){
           if( ui->tableWidget_viewer_sum_2->item(i,1)->text().isEmpty() ){
@@ -1654,7 +1546,7 @@ void MainWindow::on_pushButton_viewer_add_sum_2_clicked()
               fileNames.pop_front();
               if( fileNames.size() == 0)
                 break;
-              }
+            }
         }
       if(fileNames.size() != 0 ){
           QMessageBox msgBox;
@@ -1665,32 +1557,6 @@ void MainWindow::on_pushButton_viewer_add_sum_2_clicked()
     }
   ui->tableWidget_viewer_sum_2->resizeColumnToContents(1);
 }
-
-
-/*
-
-void MainWindow::on_pushButton_viewer_add_sum_2_clicked()
-{
-  QString fileName = QFileDialog::getOpenFileName(this, tr("Choose mstats summary file to add"), QString(), "mstasts sum files (*.*_mstats.txt);;All files (*)");
-  if (!fileName.isEmpty()) {
-      bool fits = false;
-      for( int i = 0; i < ui->tableWidget_viewer_sum_2->rowCount(); i++ ){
-          if( ui->tableWidget_viewer_sum_2->item(i,1)->text().isEmpty() ){
-              ui->tableWidget_viewer_sum_2->item(i,1)->setText(fileName);
-              fits=true;
-              break;
-            }
-        }
-      if(!fits){
-          QMessageBox msgBox;
-          msgBox.setText("Too many files to plot (maximum is 20 files).");
-          msgBox.setIcon(QMessageBox::Critical);
-          msgBox.exec();
-        }
-    }
-  ui->tableWidget_viewer_sum_2->resizeColumnToContents(1);
-}
-*/
 
 void MainWindow::on_pushButton_viewer_del_sum_2_clicked()
 {
@@ -1703,9 +1569,7 @@ void MainWindow::on_pushButton_viewer_del_sum_2_clicked()
           ui->tableWidget_viewer_sum_2->item(i,1)->setText(  ui->tableWidget_viewer_sum_2->item(i+1,1)->text() );
           ui->tableWidget_viewer_sum_2->item(i+1,1)->setText("");
         }
-
     }
-
 }
 
 void MainWindow::on_pushButton_viewer_up_sum_2_clicked()
@@ -1723,14 +1587,12 @@ void MainWindow::on_pushButton_viewer_down_sum_2_clicked()
 {
   int x  = -1;
   x = ui->tableWidget_viewer_sum_2->currentRow();
-
   if ( x >= 0 && x <  (ui->tableWidget_viewer_sum_2->rowCount() - 1)  && !ui->tableWidget_viewer_sum_2->item(x,1)->text().isEmpty() ){
       QString swap = ui->tableWidget_viewer_sum_2->item(x+1,1)->text();
       ui->tableWidget_viewer_sum_2->item(x+1,1)->setText(  ui->tableWidget_viewer_sum_2->item(x,1)->text() );
       ui->tableWidget_viewer_sum_2->item(x,1)->setText(  swap );
       ui->tableWidget_viewer_sum_2->setCurrentCell(x+1, 1);
     }
-
 }
 
 void MainWindow::on_pushButton_plots_chooseFile_clicked()
@@ -1744,9 +1606,7 @@ void MainWindow::on_pushButton_plots_chooseFile_clicked()
           ui->lineEdit_plot_saveTofile->setPlaceholderText("Path to file should not contain empty spaces");
           pointer_to_pipeline->Daplotter.set_filename( "" );
         }
-
     }
-
 }
 
 void MainWindow::on_pushButton_plots_work_clicked( )
@@ -1758,7 +1618,6 @@ void MainWindow::on_pushButton_plots_work_clicked( )
         sum_files.push_back( ui->tableWidget_viewer_sum->item(i,1)->text().toStdString().c_str()  );
       if( !ui->tableWidget_viewer_sum->item(i,0)->text().isEmpty() )
         sum_names.push_back( ui->tableWidget_viewer_sum->item(i,0)->text().toStdString().c_str()  );
-
     }
   pointer_to_pipeline->Daplotter.set_sum_files( sum_files );
 
@@ -1766,7 +1625,6 @@ void MainWindow::on_pushButton_plots_work_clicked( )
     pointer_to_pipeline->Daplotter.clear_sum_names();
   else
     pointer_to_pipeline->Daplotter.set_sum_names( sum_names );
-
   //get mstats files
   std::vector < std::string > ms_files, ms_names;
   for(  int i = 0; i < ui->tableWidget_viewer_sum_2->rowCount(); i++ ){
@@ -1774,19 +1632,14 @@ void MainWindow::on_pushButton_plots_work_clicked( )
         ms_files.push_back( ui->tableWidget_viewer_sum_2->item(i,1)->text().toStdString().c_str()  );
       if( !ui->tableWidget_viewer_sum_2->item(i,0)->text().isEmpty() )
         ms_names.push_back( ui->tableWidget_viewer_sum_2->item(i,0)->text().toStdString().c_str()  );
-
     }
   pointer_to_pipeline->Daplotter.set_mstats_files( ms_files );
-
   if( ms_files.size() != ms_names.size() )
     pointer_to_pipeline->Daplotter.clear_ms_names();
   else
     pointer_to_pipeline->Daplotter.set_ms_names( ms_names );
-
-
   pointer_to_pipeline->Daplotter.set_filename( ui->lineEdit_plot_saveTofile->text().toStdString() );
   std::string res = pointer_to_pipeline->Daplotter.work( pointer_to_pipeline->daPaths );
-
   if( res != "" ){
       QMessageBox msgBox;
       msgBox.setText("Errors plotting results");
@@ -1794,9 +1647,7 @@ void MainWindow::on_pushButton_plots_work_clicked( )
       msgBox.setInformativeText(res.c_str());
       msgBox.setWindowModality(Qt::WindowModal);
       msgBox.exec();
-
     }
-
 }
 
 void MainWindow::on_radioButton_plots_acc_none_clicked()
@@ -1807,13 +1658,11 @@ void MainWindow::on_radioButton_plots_acc_none_clicked()
 void MainWindow::on_radioButton_plots_acc_sindoub_clicked()
 {
   pointer_to_pipeline->Daplotter.set_acc_type( 1 );
-
 }
 
 void MainWindow::on_radioButton_plots_acc_full_clicked()
 {
   pointer_to_pipeline->Daplotter.set_acc_type( 2 );
-
 }
 
 
@@ -1826,6 +1675,9 @@ void MainWindow::on_fontComboBox_currentFontChanged(const QFont &f)
   ui->plainTextEdit_user_mSNP->setFont(f);
   ui->plainTextEdit_user_ngs->setFont(f);
   ui->plainTextEdit_user_snp_sites->setFont(f);
+  ui->plainTextEdit_user_iSNPcall_bigScreen->setFont(f);
+  ui->plainTextEdit_user_mSNPcall_bigScreen->setFont(f);
+  ui->plainTextEdit_user_sites_bigScreen->setFont(f);
 }
 
 void MainWindow::on_spinBox_fontsize_valueChanged(int arg1)
@@ -1839,7 +1691,9 @@ void MainWindow::on_spinBox_fontsize_valueChanged(int arg1)
   ui->plainTextEdit_user_mSNP->setFont(f);
   ui->plainTextEdit_user_ngs->setFont(f);
   ui->plainTextEdit_user_snp_sites->setFont(f);
-
+  ui->plainTextEdit_user_iSNPcall_bigScreen->setFont(f);
+  ui->plainTextEdit_user_mSNPcall_bigScreen->setFont(f);
+  ui->plainTextEdit_user_sites_bigScreen->setFont(f);
 }
 
 
@@ -1850,7 +1704,6 @@ void MainWindow::on_pushButton_help_ms_clicked()
                              "<p align=\"center\">ms is a coalescent simulator, used in input step with default options</p>"
                              "<p align=\"center\"><a href=\"https://home.uchicago.edu/rhudson1/source/mksamples.html\"><span style=\" text-decoration: underline; color:#0000ff;\">website</span></a></p>"
                              ));
-
 }
 
 void MainWindow::on_pushButton_help_art_clicked()
@@ -1860,7 +1713,6 @@ void MainWindow::on_pushButton_help_art_clicked()
                              "<p align=\"center\">art_illumina is a NGS short read simulator, used in NGS simulation step with default options</p>"
                              "<p align=\"center\"><a href=\"http://www.niehs.nih.gov/research/resources/software/biostatistics/art\"><span style=\" text-decoration: underline; color:#0000ff;\">website</span></a></p>"
                              ));
-
 }
 
 void MainWindow::on_pushButton_help_bwa_clicked()
@@ -1870,7 +1722,6 @@ void MainWindow::on_pushButton_help_bwa_clicked()
                              "<p align=\"center\">bwa is an aligner for NGS short reads, used in alignment step with default options</p>"
                              "<p align=\"center\"><a href=\"http://bio-bwa.sourceforge.net/\"><span style=\" text-decoration: underline; color:#0000ff;\">website</span></a></p>"
                              ));
-
 }
 
 void MainWindow::on_pushButton_help_samtools_clicked()
@@ -1880,7 +1731,6 @@ void MainWindow::on_pushButton_help_samtools_clicked()
                              "<p align=\"center\">samtools is a package for SNP calling and filtering, used in SNP calling step with default options</p>"
                              "<p align=\"center\"><a href=\"http://samtools.sourceforge.net/\"><span style=\" text-decoration: underline; color:#0000ff;\">website</span></a></p>"
                              ));
-
 }
 
 void MainWindow::on_pushButton_help_bcftools_clicked()
@@ -1890,7 +1740,6 @@ void MainWindow::on_pushButton_help_bcftools_clicked()
                              "<p align=\"center\">bacftools is part of samtools package</p>"
                              "<p align=\"center\"><a href=\"http://samtools.sourceforge.net/\"><span style=\" text-decoration: underline; color:#0000ff;\">website</span></a></p>"
                              ));
-
 }
 
 void MainWindow::on_pushButton_help_vcfutils_clicked()
@@ -1900,7 +1749,6 @@ void MainWindow::on_pushButton_help_vcfutils_clicked()
                              "<p align=\"center\">vcfutils.pl is part of samtools package</p>"
                              "<p align=\"center\"><a href=\"http://samtools.sourceforge.net\"><span style=\" text-decoration: underline; color:#0000ff;\">website</span></a></p>"
                              ));
-
 }
 
 void MainWindow::on_pushButton_help_java_clicked()
@@ -1910,8 +1758,6 @@ void MainWindow::on_pushButton_help_java_clicked()
                              "<p align=\"center\">java is used with picard tools</p>"
                              "<p align=\"center\"><a href=\"http://www.java.com\"><span style=\" text-decoration: underline; color:#0000ff;\">website</span></a></p>"
                              ));
-
-
 }
 
 void MainWindow::on_pushButton_help_picard_clicked()
@@ -1940,7 +1786,6 @@ void MainWindow::on_pushButton_help_pipeliner_clicked()
                              "<p align=\"center\">Pipeliner's command-line tool</p>"
                              "<p align=\"center\"><a href=\"https://github.com/brunonevado/pipeliner\"><span style=\" text-decoration: underline; color:#0000ff;\">website</span></a></p>"
                              ));
-
 }
 
 void MainWindow::on_pushButton_help_bash_clicked()
@@ -1960,7 +1805,6 @@ void MainWindow::on_pushButton_help_mstats_clicked()
                              "<p align=\"center\">mstatspop is used to estimate population genetics' statistics</p>"
                              "<p align=\"center\"><a href=\"http://bioinformatics.cragenomica.es/numgenomics/people/sebas/software/software.html\"><span style=\" text-decoration: underline; color:#0000ff;\">website</span></a></p>"
                              ));
-
 }
 
 void MainWindow::on_pushButton_help_R_clicked()
@@ -1970,7 +1814,6 @@ void MainWindow::on_pushButton_help_R_clicked()
                              "<p align=\"center\">The R project. Used for plotting results</p>"
                              "<p align=\"center\"><a href=\"http://www.r-project.org/\"><span style=\" text-decoration: underline; color:#0000ff;\">website</span></a></p>"
                              ));
-
 }
 
 
@@ -1978,17 +1821,14 @@ void MainWindow::on_actionHelp_triggered()
 {
   if(ui->dockWidget_help->isHidden())
     ui->dockWidget_help->show();
-
   this->pipeliner_manual();
 }
 
 
 void MainWindow::pipeliner_manual ( ){
-
   for (unsigned int i = 0; i < tutorial_widgets.size(); i++)
     for( int j = 0; j < tutorial_widgets.at(i)->count(); j++ )
       tutorial_widgets.at(i)->setTabIcon(j, QIcon());
-
   switch (man_index) {
     case 0:
       ui->textBrowser_help->setText(
@@ -1997,18 +1837,14 @@ void MainWindow::pipeliner_manual ( ){
             "<p>The analysis in <b>Pipeliner</b> includes: simulation of genetic data; simulation of NGS reads upon this genetic data; bioinformatic analysis of resulting NGS data; and comparison of original and final datasets, to evaluate the performance of the bioinformatic analysis."
             "<p><b>Pipeliner</b> consists of two separate executables: a Graphical User Interface (GUI) used for setting up analysis’ parameters and plotting results - this program - and a command-line tool used during the analysis to convert file formats, compute results, etc."
             "<p>In addition, <b>Pipeliner</b> uses several software packages for simulation of input data, NGS reads, and analysis of NGS data."
-
             );
       break;
-
     case 1:
       ui->tabWidget_main->setTabIcon(0,iAlert);
       ui->tabWidget_main->setTabIcon(1,iAlert);
       ui->tabWidget_main->setTabIcon(2,iAlert);
       ui->tabWidget_main->setTabIcon(3,iAlert);
-
       ui->textBrowser_help->setText(
-
             "<p><b>Pipeliner: introdution</b>"
             "<p>The <b>Pipeliner GUI</b> contains four main tabs:"
             "<p>The <b>Pipeline</b> tab is used to set up the analysis, i.e. defining the sampling design, study system, and bioinformatics’ analysis."
@@ -2016,26 +1852,21 @@ void MainWindow::pipeliner_manual ( ){
             "<p>The <b>Bash file</b> allows previewing, editing and saving the pipeline’s commands."
             "<p>The <b>Plots</b> tab can be used for summarising and plotting the results of one or several pipelines."
             "<p>For the following example, we will be using only default options. Pipeliner's manual contains more information about alternative steps."
-
             );
       break;
-
     case 2:
       ui->tabWidget_main->setTabIcon(0,iAlert);
       ui->tabWidget_pipeline->setTabIcon(0,iAlert);
       ui->tabWidget_main->setCurrentIndex(0);
       ui->tabWidget_pipeline->setCurrentIndex(0);
       pointer_to_pipeline->set_active_input(0);
-
       ui->textBrowser_help->setText(
             "<p><b>Pipeliner: a short example</b>"
             "<p><b>Pipeline > Input</b>"
             "<p>In the input step, the user defines how to obtain the DNA sequences for analysis. These include two haplotypes per diploid individual and one haplotype to be used as reference genome. Three input modes are available to achieve this: ms coalescent simulation, sfs_code forward simulation, and User-defined commands."
             "<p>For this example, set the input type to <b>ms</b>, then number of <b>Individuals</b> to 5, <b>theta</b> and <b>rho</b> to 100, and <b>split time</b> to 0 (zero)"
             "<p>In the ancestral sequence box, choose <b>use random sequence</b> and set sequence length to 100 000"
-
             );
-
       break;
     case 3:
       ui->tabWidget_main->setTabIcon(0,iAlert);
@@ -2043,13 +1874,11 @@ void MainWindow::pipeliner_manual ( ){
       ui->tabWidget_main->setCurrentIndex(0);
       ui->tabWidget_pipeline->setCurrentIndex(1);
       pointer_to_pipeline->set_active_ngs(0);
-
       ui->textBrowser_help->setText(
             "<p><b>Pipeliner: a short example</b>"
             "<p><b>Pipeline > NGS</b>"
             "<p>Used to define how to obtain the NGS short reads for each diploid individual analysed. At the end of this step, there should be one (or two, if simulating paired-end sequencing) fasta-quality files per individual. Two options currently available: default art_illumina and User-defined."
             "<p>For this example, set the NGS type to <b>art</b>, then set <b>Paired-ends</b> run, set <b>coverage</b> to 6x, and <b>Read length</b> to 75."
-
             );
       break;
     case 4:
@@ -2058,13 +1887,11 @@ void MainWindow::pipeliner_manual ( ){
       ui->tabWidget_main->setCurrentIndex(0);
       ui->tabWidget_pipeline->setCurrentIndex(2);
       pointer_to_pipeline->set_active_aligner(0);
-
       ui->textBrowser_help->setText(
             "<p><b>Pipeliner: a short example</b>"
             "<p><b>Pipeline > Alignment</b>"
             "<p>Used to specify how to align the NGS short reads from each individual to the reference sequence. This step should start from the fasta-quality files obtained before, and finish with a single aligned bam file for each individual. Two options available: default using bwa, or User-defined step."
             "<p>For this example, set the alignment type to <b>bwa</b>, input to <b>Paired-end</b>, <b>mapping quality - MAPQ</b> to 20 and <b>number of mismatches permitted - NMP</b> to 6."
-
             );
       break;
     case 5:
@@ -2073,13 +1900,11 @@ void MainWindow::pipeliner_manual ( ){
       ui->tabWidget_main->setCurrentIndex(0);
       ui->tabWidget_pipeline->setCurrentIndex(3);
       pointer_to_pipeline->set_active_snpcall(0);
-
       ui->textBrowser_help->setText(
             "<p><b>Pipeliner: a short example</b>"
             "<p><b>Pipeline > SNP calling</b>"
             "<p>Used to define SNP calling and filtering options. This step starts from the aligned short-reads obtained before (.bam files) and finishes with a .vcf format file. SNP calling can be done separately for each individual (iSNPcall) as well as jointly for all individuals under analysis (multiple-sample SNP calling, mSNPcall). Two options available: default using samtools, or User-defined step."
             "<p>For this example, choose <b>samtools</b> type, select both <b>iSNPcall</b> and <b>mSNPcall</b> options and check the <b>disable BAQ</b> box. In the filtering section set <b>Minimum depth</b> to 3, <b>Maximum depth</b> to 100, <b>Minimum baseQ</b> of 13 and <b>Minimum RMS</b> of 10."
-
             );
       break;
     case 6:
@@ -2087,7 +1912,6 @@ void MainWindow::pipeliner_manual ( ){
       ui->tabWidget_pipeline->setTabIcon(4,iAlert);
       ui->tabWidget_main->setCurrentIndex(0);
       ui->tabWidget_pipeline->setCurrentIndex(4);
-
       ui->textBrowser_help->setText(
             "<p><b>Pipeliner: a short example</b>"
             "<p><b>Pipeline > Statistics</b>"
@@ -2098,7 +1922,6 @@ void MainWindow::pipeliner_manual ( ){
     case 7:
       ui->tabWidget_main->setTabIcon(1,iAlert);
       ui->tabWidget_main->setCurrentIndex(1);
-
       ui->textBrowser_help->setText(
             "<p><b>Pipeliner: a short example</b>"
             "<p><b>Run settings</b>"
@@ -2112,33 +1935,26 @@ void MainWindow::pipeliner_manual ( ){
     case 8:
       ui->tabWidget_main->setTabIcon(2,iAlert);
       ui->tabWidget_main->setCurrentIndex(2);
-
       ui->textBrowser_help->setText(
             "<p><b>Pipeliner: a short example</b>"
             "<p><b>Bash file</b>"
             "<p>This tab is used to preview the Bash commands file."
             "<p>Press the <b>Write Bash</b> button to preview the commands. If any settings are incorrectly set, there will be a warning. Otherwise, the bash file is ready to run."
-            "<p>Press the <b>Save Bash</b> button, and write the commands into a file, preferably in the Data folder defined before. This file can now be executed outside Pipeliner,"
-            " by starting a terminal window, navigating to the folder containing the Bash file and typing:"
-            "<p>  chmod +x filename.sh"
-            "<p>  ./filename.sh > out 2> err"
+            "<p>Press the <b>Save Bash and Run</b> button, and save the commands into a file, preferably in the Data folder defined before."
             "<p>The pipeline defined in the PipelinerGUI will now be executed."
             );
-
       break;
     case 9:
       ui->tabWidget_main->setTabIcon(2,iAlert);
       ui->tabWidget_main->setCurrentIndex(2);
-
       ui->textBrowser_help->setText(
             "<p><b>Pipeliner: a short example</b>"
             "<p><b>Running the analysis</b>"
-            "<p>Wait until the run finishes, and then check the files <i>err</i> and <i>out</i>, which are simply text files with the log of the run."
-            "<p>In case the run encountered some errors, they should be present in the file <i>err</i>. The file can be quite long, and errors difficult to spot, but using a text editor’s search function (or the grep function in terminal), look for the words \"ERROR\", \"fault\" and \"fail\". If present, these likely mean something went wrong, and will normally be followed by some information on what went wrong. This can be missing executables, wrong file formats, or any other of a myriad of problems."
+            "<p>Wait until the run finishes, and then check the log of the run."
+            "<p>In case the run encountered some errors, they should be present in the text, marked e.g. <i>ERROR</i>, <i>abort</i>, <i>WARNING</i>, followed by some information on what went wrong. This can be missing executables, wrong file formats, or any other of a myriad of problems."
             "<p>If no errors were encountered during the analysis, there should now be 5 files in the Data folder named <i>summary.runprefix.(...).txt</i>."
             );
       break;
-
     case 10:
       ui->tabWidget_main->setTabIcon(3,iAlert);
       ui->tabWidget_main->setCurrentIndex(3);
@@ -2146,11 +1962,11 @@ void MainWindow::pipeliner_manual ( ){
       ui->textBrowser_help->setText(
             "<p><b>Pipeliner: a short example</b>"
             "<p><b>Plots</b>"
-      "<p>The <b>Plots</b> tab is used to summarise the results of the pipeline defined. In the <b>Plot Genotype call's results</b>, press the Add file button, navigate to the Data folder, and select the two appropriate summary files. In the name column, enter either iSNPcall or mSNPcall, according to which summary file is present on the file column. "
-      "<p>In the <b>AAC classes</b>, choose the singletons + doubletons option."
-      "<p>In the <b>Include population genomics' results</b> section add the summary files (...)preseq_mstats.txt, (...)iSNPcall_mstats.txt and (...)mSNPcall_mstats.txt, and label then accordingly in the name column."
+            "<p>The <b>Plots</b> tab is used to summarise the results of the pipeline defined. In the <b>Plot Genotype call's results</b>, press the Add file button, navigate to the Data folder, and select the two appropriate summary files. In the name column, enter either iSNPcall or mSNPcall, according to which summary file is present on the file column. "
+            "<p>In the <b>AAC classes</b>, choose the singletons + doubletons option."
+            "<p>In the <b>Include population genomics' results</b> section add the summary files (...)preseq_mstats.txt, (...)iSNPcall_mstats.txt and (...)mSNPcall_mstats.txt, and label then accordingly in the name column."
             "<p>Now select the file to save the PDF results to (<b>PDF file to create</b>), and click Plot results. After a brief moment, the resulting pdf file should open automatically with the default PDF viewer of the computer."
-       );
+            );
       break;
     case 11:
       ui->tabWidget_main->setTabIcon(3,iAlert);
@@ -2161,13 +1977,11 @@ void MainWindow::pipeliner_manual ( ){
             "<p>This short example is complete."
             "<p>It is now possible to go back and define a different pipeline, e.g. using a different number of individuals, average depth, or diffferent software for alignment and SNP calling."
             "<p>The results of different runs can then be loaded into the <b>Plots</b>, so that alternative pipelines can be compared in a straighforward way."
-       );
+            );
       break;
-
     default:
       break;
     }
-
   ui->horizontalSlider_tutorial->setEnabled(false);
 }
 
@@ -2187,7 +2001,6 @@ void MainWindow::on_pushButton_tutorial_forward_clicked()
       ui->horizontalSlider_tutorial->setValue(man_index);
     }
   this->pipeliner_manual();
-
 }
 
 void MainWindow::on_pushButton_tutorial_reset_clicked()
@@ -2199,18 +2012,70 @@ void MainWindow::on_pushButton_tutorial_reset_clicked()
 
 void MainWindow::on_checkBox_user_align_createDict_clicked(bool checked)
 {
-    pointer_to_pipeline->daAlignUser.set_creatDict( checked );
+  pointer_to_pipeline->daAlignUser.set_creatDict( checked );
 }
 
-void MainWindow::toggle_full_screen(){
-  if( MainWindow::windowState() == 0){
-      MainWindow::setWindowState(Qt::WindowMaximized);
-    }
-  else{
-      MainWindow::setWindowState(0);
+void MainWindow::on_spinBox_sam_minmapq_valueChanged(int arg1)
+{
+  pointer_to_pipeline->daSnpcallSamtools.set_mapq( arg1 );
+}
 
-    }
+void MainWindow::on_pushButton_user_iSNPcall_bigScreen_clicked()
+{
+  ui->stackedWidget_snpcall->setCurrentIndex(2);
+  ui->plainTextEdit_user_iSNPcall_bigScreen->clear();
+  ui->plainTextEdit_user_iSNPcall_bigScreen->appendPlainText( ui->plainTextEdit_user_iSNP->toPlainText() );
+}
 
-std::cout << MainWindow::windowState() << std::endl;
-  //ui->plainTextEdit_bash->showFullScreen();
+void MainWindow::on_pushButton_user_iSNPcall_BigScreen_close_clicked()
+{
+  ui->stackedWidget_snpcall->setCurrentIndex(1);
+  ui->plainTextEdit_user_iSNP->clear();
+  ui->plainTextEdit_user_iSNP->appendPlainText( ui->plainTextEdit_user_iSNPcall_bigScreen->toPlainText() );
+}
+
+void MainWindow::on_pushButton_user_mSNPcall_bigScreen_clicked()
+{
+  ui->stackedWidget_snpcall->setCurrentIndex(3);
+  ui->plainTextEdit_user_mSNPcall_bigScreen->clear();
+  ui->plainTextEdit_user_mSNPcall_bigScreen->appendPlainText( ui->plainTextEdit_user_mSNP->toPlainText() );
+}
+
+void MainWindow::on_pushButton_user_mSNPcall_BigScreen_close_clicked()
+{
+  ui->stackedWidget_snpcall->setCurrentIndex(1);
+  ui->plainTextEdit_user_mSNP->clear();
+  ui->plainTextEdit_user_mSNP->appendPlainText( ui->plainTextEdit_user_mSNPcall_bigScreen->toPlainText() );
+}
+
+void MainWindow::on_pushButton_user_sites_bigScreen_clicked()
+{
+  ui->stackedWidget_snpcall->setCurrentIndex(4);
+  ui->plainTextEdit_user_sites_bigScreen->clear();
+  ui->plainTextEdit_user_sites_bigScreen->appendPlainText( ui->plainTextEdit_user_snp_sites->toPlainText() );
+}
+
+void MainWindow::on_pushButton_user_sites_BigScreen_close_clicked()
+{
+  ui->stackedWidget_snpcall->setCurrentIndex(1);
+  ui->plainTextEdit_user_snp_sites->clear();
+  ui->plainTextEdit_user_snp_sites->appendPlainText( ui->plainTextEdit_user_sites_bigScreen->toPlainText() );
+}
+
+void MainWindow::on_pushButton_runLocally_clicked()
+{
+  QString bfile = MainWindow::SaveBash();
+  if ( strcmp ( bfile.toStdString().c_str() , "err" ) != 0){
+      QProcess runner;
+      QStringList args;
+      args << "runner" << QString::fromStdString(pointer_to_pipeline->daRunSettings.get_runprefix())
+           << QString::fromStdString(pointer_to_pipeline->daRunSettings.get_dirdata())
+           << bfile << QString::fromStdString(pointer_to_pipeline->daPaths.get_path_bash());
+      runner.startDetached(QString::fromStdString(pointer_to_pipeline->get_name()),args);
+    }
+}
+
+void MainWindow::on_actionRun_triggered()
+{
+  ui->pushButton_runLocally->click();
 }

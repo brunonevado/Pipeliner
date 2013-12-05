@@ -76,7 +76,7 @@ public:
     void add_keyword ( std::string in ) { keywordPatterns << QString::fromStdString(in.c_str())  ; };
     void apply();
     void set_bash (paths path_bucket);
-
+    void apply_to_log();
 };
 
 #endif // HIGHLIGHTER_H

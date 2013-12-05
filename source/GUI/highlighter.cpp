@@ -124,7 +124,6 @@ void Highlighter::set_bash( paths path_bucket ) {
       highlightingRules.append(rule);
     }
 
-
 }
 
 void Highlighter::apply(){
@@ -139,7 +138,7 @@ void Highlighter::apply(){
       highlightingRules.append(rule);
     }
 
-// add comments and call outs
+  // add comments and call outs
   // comments
   keywordPatterns.clear();
   keywordFormat.setForeground(Qt::darkGreen);
@@ -171,11 +170,7 @@ void Highlighter::apply(){
       rule.pattern.setMinimal(false);
       highlightingRules.append(rule);
     }
-
-
-
 }
-
 
 void Highlighter::highlightBlock(const QString &text)
 {
@@ -189,4 +184,57 @@ void Highlighter::highlightBlock(const QString &text)
         }
     }
 
+}
+
+void Highlighter::apply_to_log(){
+  HighlightingRule rule;
+
+  // errors
+  keywordFormat.setForeground(Qt::red);
+  keywordFormat.setUnderlineStyle(QTextCharFormat::NoUnderline);
+
+  keywordFormat.setFontWeight(QFont::Normal);
+  keywordFormat.setFontItalic(false);
+  keywordPatterns << ".*ERROR.*" << ".*abort.*" << ".*fail.*"
+                  << ".*segmentation.*" << ".*No such file.*";
+
+
+
+  foreach (const QString &pattern, keywordPatterns) {
+      rule.pattern = QRegExp(pattern);
+      rule.format = keywordFormat;
+      rule.pattern.setMinimal(false);
+      highlightingRules.append(rule);
+    }
+
+  // warnings
+  keywordPatterns.clear();
+  keywordFormat.setForeground(Qt::darkYellow);
+  keywordFormat.setUnderlineStyle(QTextCharFormat::NoUnderline);
+
+  keywordFormat.setFontWeight(QFont::Normal);
+  keywordFormat.setFontItalic(false);
+  keywordPatterns << ".*WARN.*";
+
+  foreach (const QString &pattern, keywordPatterns) {
+      rule.pattern = QRegExp(pattern);
+      rule.format = keywordFormat;
+      rule.pattern.setMinimal(false);
+      highlightingRules.append(rule);
+    }
+
+  keywordPatterns.clear();
+  keywordFormat.setForeground(Qt::darkGreen);
+  keywordFormat.setUnderlineStyle(QTextCharFormat::NoUnderline);
+
+  keywordFormat.setFontWeight(QFont::Normal);
+  keywordFormat.setFontItalic(false);
+  keywordPatterns << "[^\\\\]?\\#.+";
+
+  foreach (const QString &pattern, keywordPatterns) {
+      rule.pattern = QRegExp(pattern);
+      rule.format = keywordFormat;
+      rule.pattern.setMinimal(false);
+      highlightingRules.append(rule);
+    }
 }

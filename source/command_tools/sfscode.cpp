@@ -2,7 +2,7 @@
 //  sfscode.cpp
 //  Pipeliner
 //
-//  Copyright (c) 2013 Bruno Nevado. All rights reserved.
+//  Copyright (c) 2013 Bruno Nevado. GNU license.
 //
 
 #include <fstream>
@@ -92,7 +92,6 @@ fasta sfs2fas ( string infile, string outfile,
         // loops starts at 1 because 0 contains fasta sequence
         vector<string> fields;
         msplit( mutations.at(mutation), ",",  &fields );
-        //std::cout << " MUTATION AT : " <<  fields.at(2).c_str() << endl;
         unsigned int site = atoi (fields.at(2).c_str()); // site where mutation occurs, 0-based
         char alternative = fields.at(6).at(0);
         

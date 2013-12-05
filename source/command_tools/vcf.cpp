@@ -2,7 +2,7 @@
 //  vcf.cpp
 //  Pipeliner
 //
-//  Copyright (c) 2013 Bruno Nevado. All rights reserved.
+//  Copyright (c) 2013 Bruno Nevado. GNU license.
 //
 
 
@@ -70,12 +70,6 @@ void vcf::info_to_stdout () {
         cout << ", " << names.at(i);
     
     cout << ")\n";
-    /*
-     for(int i = 0; i < positions.size(); i++)
-     cout << positions.at(i) << " " << matrix.at(i)
-     << " " << matrix[i][0] << " " << matrix[i][1] << " " << matrix[i][2] << "\n";
-     exit(1);
-     */
 }
 
 
@@ -100,7 +94,7 @@ void vcf::slurp_file (){
             lines_processed++;
             vector <string> genos;
             genos =     this->get_genotypes(cline.c_str());
-
+            
             char *iupac_codes;
             iupac_codes = new char [this->num_inds()];
             
@@ -182,109 +176,109 @@ vector <string> vcf::get_genotypes (string line){
                 ambiguous_sites.at(cind0).push_back(  atoi ( fields.at(1).c_str() ) );
             }
             else{
-            
-            vector <string> pl_values;
-            msplit( values.at(pl_field), ",", &pl_values );
-            int min_pl_field = -1 , num_zeros = 0;
-            for( unsigned int index_pl = 0; index_pl < pl_values.size(); index_pl++ ){
-                if ( atoi(pl_values.at(index_pl).c_str()) == 0 ){
-                    min_pl_field = index_pl;
-                    num_zeros++;
-                }
-            }
-            
-            if( num_zeros != 1 ){
-                toreturn.push_back("ambiguous");
-                ambiguous_sites.at(cind0).push_back(  atoi ( fields.at(1).c_str() ) );
-            }
-            else{
-                // min_pl_field, alt_alleles
-                string geno;
-                // check input first
-                if(  (alt_alleles.size() == 1 && pl_values.size() != 3 )
-                   || (alt_alleles.size() == 2 && pl_values.size() != 6 )
-                   || (alt_alleles.size() == 3 && pl_values.size() != 10 )
-                   || (alt_alleles.size() == 4 && pl_values.size() != 15 )
-                   
-                   ){
-                    cerr << "ERROR (get_geno_from_vcf): number of PL fields and alt alleles does not match. Offending line: " << line << endl;
-                    exit(1);
+                
+                vector <string> pl_values;
+                msplit( values.at(pl_field), ",", &pl_values );
+                int min_pl_field = -1 , num_zeros = 0;
+                for( unsigned int index_pl = 0; index_pl < pl_values.size(); index_pl++ ){
+                    if ( atoi(pl_values.at(index_pl).c_str()) == 0 ){
+                        min_pl_field = index_pl;
+                        num_zeros++;
+                    }
                 }
                 
-                
-                if(ignoremh && min_pl_field > 2){
+                if( num_zeros != 1 ){
                     toreturn.push_back("ambiguous");
                     ambiguous_sites.at(cind0).push_back(  atoi ( fields.at(1).c_str() ) );
                 }
                 else{
-                switch(min_pl_field){
-                    case 0: // RR
-                        geno = fields.at(3) + fields.at(3);
-                        toreturn.push_back(geno);
-                        break;
-                    case 1: //RA1
-                        geno = fields.at(3) + alt_alleles.at(0);
-                        toreturn.push_back(geno);
-                        break;
-                    case 2: //A1A1
-                        geno = alt_alleles.at(0) + alt_alleles.at(0);
-                        toreturn.push_back(geno);
-                        break;
-                    case 3: //RA2
-                        geno = fields.at(3) + alt_alleles.at(1);
-                        toreturn.push_back(geno);
-                        break;
-                    case 4: //A1A2
-                        geno = alt_alleles.at(0) + alt_alleles.at(1);
-                        toreturn.push_back(geno);
-                        break;
-                    case 5: // A2A2
-                        geno = alt_alleles.at(1) + alt_alleles.at(1);
-                        toreturn.push_back(geno);
-                        break;
-                    case 6: // RA3
-                        geno = fields.at(3) + alt_alleles.at(2);
-                        toreturn.push_back(geno);
-                        break;
-                    case 7: // A1A3
-                        geno = alt_alleles.at(0) + alt_alleles.at(2);
-                        toreturn.push_back(geno);
-                        break;
-                    case 8:  // A2A3
-                        geno = alt_alleles.at(1) + alt_alleles.at(2);
-                        toreturn.push_back(geno);
-                        break;
-                    case 9:  // A3A3
-                        geno = alt_alleles.at(2) + alt_alleles.at(2);
-                        toreturn.push_back(geno);
-                        break;
-                    case 10:  
-                        geno = fields.at(3) + alt_alleles.at(3);
-                        toreturn.push_back(geno);
-                        break;
-                    case 11:
-                        geno = alt_alleles.at(0) + alt_alleles.at(3);
-                        toreturn.push_back(geno);
-                        break;
-                    case 12:
-                        geno = alt_alleles.at(1) + alt_alleles.at(3);
-                        toreturn.push_back(geno);
-                        break;
-                    case 13:
-                        geno = alt_alleles.at(2) + alt_alleles.at(3);
-                        toreturn.push_back(geno);
-                        break;
-                    case 14:
-                        geno = alt_alleles.at(3) + alt_alleles.at(3);
-                        toreturn.push_back(geno);
-                        break;
-                    default:
-                        cerr << "ERROR(vcf, next_genotypes): Unable to process line" << line << "\n";
-                }
+                    // min_pl_field, alt_alleles
+                    string geno;
+                    // check input first
+                    if(  (alt_alleles.size() == 1 && pl_values.size() != 3 )
+                       || (alt_alleles.size() == 2 && pl_values.size() != 6 )
+                       || (alt_alleles.size() == 3 && pl_values.size() != 10 )
+                       || (alt_alleles.size() == 4 && pl_values.size() != 15 )
+                       
+                       ){
+                        cerr << "ERROR (get_geno_from_vcf): number of PL fields and alt alleles does not match. Offending line: " << line << endl;
+                        exit(1);
+                    }
+                    
+                    
+                    if(ignoremh && min_pl_field > 2){
+                        toreturn.push_back("ambiguous");
+                        ambiguous_sites.at(cind0).push_back(  atoi ( fields.at(1).c_str() ) );
+                    }
+                    else{
+                        switch(min_pl_field){
+                            case 0: // RR
+                                geno = fields.at(3) + fields.at(3);
+                                toreturn.push_back(geno);
+                                break;
+                            case 1: //RA1
+                                geno = fields.at(3) + alt_alleles.at(0);
+                                toreturn.push_back(geno);
+                                break;
+                            case 2: //A1A1
+                                geno = alt_alleles.at(0) + alt_alleles.at(0);
+                                toreturn.push_back(geno);
+                                break;
+                            case 3: //RA2
+                                geno = fields.at(3) + alt_alleles.at(1);
+                                toreturn.push_back(geno);
+                                break;
+                            case 4: //A1A2
+                                geno = alt_alleles.at(0) + alt_alleles.at(1);
+                                toreturn.push_back(geno);
+                                break;
+                            case 5: // A2A2
+                                geno = alt_alleles.at(1) + alt_alleles.at(1);
+                                toreturn.push_back(geno);
+                                break;
+                            case 6: // RA3
+                                geno = fields.at(3) + alt_alleles.at(2);
+                                toreturn.push_back(geno);
+                                break;
+                            case 7: // A1A3
+                                geno = alt_alleles.at(0) + alt_alleles.at(2);
+                                toreturn.push_back(geno);
+                                break;
+                            case 8:  // A2A3
+                                geno = alt_alleles.at(1) + alt_alleles.at(2);
+                                toreturn.push_back(geno);
+                                break;
+                            case 9:  // A3A3
+                                geno = alt_alleles.at(2) + alt_alleles.at(2);
+                                toreturn.push_back(geno);
+                                break;
+                            case 10:
+                                geno = fields.at(3) + alt_alleles.at(3);
+                                toreturn.push_back(geno);
+                                break;
+                            case 11:
+                                geno = alt_alleles.at(0) + alt_alleles.at(3);
+                                toreturn.push_back(geno);
+                                break;
+                            case 12:
+                                geno = alt_alleles.at(1) + alt_alleles.at(3);
+                                toreturn.push_back(geno);
+                                break;
+                            case 13:
+                                geno = alt_alleles.at(2) + alt_alleles.at(3);
+                                toreturn.push_back(geno);
+                                break;
+                            case 14:
+                                geno = alt_alleles.at(3) + alt_alleles.at(3);
+                                toreturn.push_back(geno);
+                                break;
+                            default:
+                                cerr << "ERROR(vcf, next_genotypes): Unable to process line" << line << "\n";
+                        }
+                    }
                 }
             }
         }
-    }
         
     }
     

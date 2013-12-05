@@ -2,7 +2,7 @@
 //  summarise.h
 //  Pipeliner
 //
-//  Copyright (c) 2013 Bruno Nevado. All rights reserved.
+//  Copyright (c) 2013 Bruno Nevado. GNU license.
 //
 
 #ifndef __Pipeliner__summarise__
@@ -13,8 +13,6 @@
 
 #include "fasta.h"
 #include "vcf.h"
-
-//class fasta;
 
 using namespace std;
 
@@ -43,23 +41,6 @@ public:
     void print ( string outfile, bool append );
     
 };
-
-
-
-
-
-/*
- class summarise {
- private:
- fasta original , called ;
- int ref_index_in_fas;
- public:
- summarise( fasta &input, fasta &result, int index_out );
- 
- 
- };
- 
- */
 
 
 #endif /* defined(__Pipeliner__summarise__) */

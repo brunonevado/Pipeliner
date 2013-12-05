@@ -2,7 +2,7 @@
 //  ms.cpp
 //  Pipeliner
 //
-//  Copyright (c) 2013 Bruno Nevado. All rights reserved.
+//  Copyright (c) 2013 Bruno Nevado. GNU license.
 //
 
 
@@ -15,7 +15,6 @@
 
 #include "ms.h"
 
-// MS CLASS CONSTRUCTOR
 
 ms::ms ( int a ){
     matrix.reserve(a);
@@ -23,19 +22,11 @@ ms::ms ( int a ){
     
 }
 
-// MS CLASS SPEAKING FUNCTION
 
 void ms::info_to_stdout () {
     
     cout << "Infile: " << this->input_file() << " (" << this->num_lines() << " individuals, " <<
     this->num_seg_sites() << " segregating sites)\n";
-    
-    /*
-     cout << "Data matrix: ";
-     for(int i = 0; i < matrix.size(); i++)
-     cout << matrix[i] << "\n";
-     */
-    
     
 }
 

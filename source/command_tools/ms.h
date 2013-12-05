@@ -2,7 +2,7 @@
 //  ms.h
 //  Pipeliner
 //
-//  Copyright (c) 2013 Bruno Nevado. All rights reserved.
+//  Copyright (c) 2013 Bruno Nevado. GNU license.
 //
 
 #ifndef __Pipeliner__ms__

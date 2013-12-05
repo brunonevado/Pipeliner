@@ -2,7 +2,7 @@
 //  summarise.cpp
 //  Pipeliner
 //
-//  Copyright (c) 2013 Bruno Nevado. All rights reserved.
+//  Copyright (c) 2013 Bruno Nevado. GNU license.
 //
 
 #include "summarise.h"
@@ -71,7 +71,7 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
     input_vcfs.at(index0_ind) = vcffile;
     input_sites.at(index0_ind) = sitesfile;
     int index0_haplo1 = ( (index0_ind + 1) * 2 ) - 1;  // lines of current ind in preseq fasta file (2 lines per ind)
-    int index0_haplo2 = (index0_ind + 1)* 2 ;        //   note that posseq fasta file has a single line per ind
+    int index0_haplo2 = (index0_ind + 1)* 2 ;        //   note that postseq fasta file has a single line per ind
     tags.at(index0_ind) = tag;
     for (unsigned int site0 = 0; site0 < preseq.num_bases(); site0++ ) {
         string original_conf;
@@ -86,7 +86,7 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
             ////////////////////
             
             string out_ar;
-
+            
             
             out_ar.push_back(original_conf.at(0));
             out_ar.push_back(ref);
@@ -98,9 +98,9 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
             genotypes.push_back('_');
             genotypes.push_back(fromIUPAC(posseq.show_base(index0_ind  , site0))[0] );
             genotypes.push_back(fromIUPAC(posseq.show_base(index0_ind  , site0))[1] );
-      
+            
             total_aa.at( index0_ind  ).at(dac - 1)++;
-                        
+            
             if (posseq.show_base( index0_ind , site0) == original_conf.at(0)){
                 // correct, and screened, and called
                 aa_aa.at( index0_ind  ).at(dac - 1)++;
@@ -131,7 +131,7 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
                 err_types.push_back("aa_ra");
                 err_positions.push_back(site0+1);
                 err_genotypes.push_back( genotypes  );
-
+                
                 
             }
             else if (   posseq.show_base( index0_ind  , site0) == 'a'
@@ -147,7 +147,7 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
                 err_types.push_back("aa_oo");
                 err_positions.push_back(site0+1);
                 err_genotypes.push_back( genotypes  );
-
+                
                 
             }
             else if (  fromIUPAC(posseq.show_base(index0_ind  , site0))[0] == ref
@@ -161,7 +161,7 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
                 err_types.push_back("aa_ro");
                 err_positions.push_back(site0+1);
                 err_genotypes.push_back( genotypes  );
-
+                
                 
             }
             else if (  fromIUPAC(posseq.show_base(index0_ind  , site0))[0] == original_conf.at(0)
@@ -175,7 +175,7 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
                 err_types.push_back("aa_ao");
                 err_positions.push_back(site0+1);
                 err_genotypes.push_back( genotypes  );
-
+                
                 
             }
             else if (  fromIUPAC(posseq.show_base(index0_ind  , site0) ).size() == 2
@@ -189,7 +189,7 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
                 err_types.push_back("aa_oo2");
                 err_positions.push_back(site0+1);
                 err_genotypes.push_back( genotypes  );
-
+                
                 
             }
             else{
@@ -210,14 +210,14 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
             char alt = ( original_conf.at(0) == ref ) ? original_conf.at(1) : original_conf.at(0) ;
             int dac = preseq.calc_dac(alt, site0 + 1 );
             total_ra.at( index0_ind  ).at(dac - 1 )++;
-          
+            
             string genotypes;
             genotypes.push_back(ref);
             genotypes.append(original_conf);
             genotypes.push_back('_');
             genotypes.push_back(fromIUPAC(posseq.show_base(index0_ind  , site0))[0] );
             genotypes.push_back(fromIUPAC(posseq.show_base(index0_ind  , site0))[1] );
-        
+            
             string ra;
             ra.push_back(ref);
             ra.push_back(alt);
@@ -242,7 +242,7 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
                 err_types.push_back("ra_rr");
                 err_positions.push_back(site0+1);
                 err_genotypes.push_back( genotypes  );
-
+                
             }
             else if ( posseq.show_base( index0_ind  , site0) == alt ){
                 // ra_called_alt_alt
@@ -253,7 +253,7 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
                 err_types.push_back("ra_aa");
                 err_positions.push_back(site0+1);
                 err_genotypes.push_back( genotypes  );
-
+                
             }
             
             else if (   posseq.show_base( index0_ind  , site0) == 'a'
@@ -269,7 +269,7 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
                 err_types.push_back("ra_oo");
                 err_positions.push_back(site0+1);
                 err_genotypes.push_back( genotypes  );
-
+                
             }
             else if (  fromIUPAC(posseq.show_base(index0_ind  , site0))[0] == ref
                      || fromIUPAC(posseq.show_base(index0_ind  , site0))[1] == ref
@@ -282,7 +282,7 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
                 err_types.push_back("ra_ro");
                 err_positions.push_back(site0+1);
                 err_genotypes.push_back( genotypes  );
-
+                
             }
             else if (  fromIUPAC(posseq.show_base(index0_ind  , site0))[0] == alt
                      || fromIUPAC(posseq.show_base(index0_ind  , site0))[1] == alt
@@ -295,7 +295,7 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
                 err_types.push_back("ra_ao");
                 err_positions.push_back(site0+1);
                 err_genotypes.push_back( genotypes  );
-
+                
             }
             else if (  fromIUPAC(posseq.show_base(index0_ind  , site0) ).size() == 2
                      ){
@@ -308,7 +308,7 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
                 err_types.push_back("ra_oo2");
                 err_positions.push_back(site0+1);
                 err_genotypes.push_back( genotypes  );
-
+                
             }
             else{
                 cerr << "ERROR(summarise): site " << site0 + 1 << " slipped through the cracks!\n";
@@ -338,7 +338,7 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
                 genotypes.push_back('_');
                 genotypes.push_back(fromIUPAC(posseq.show_base(index0_ind  , site0))[0] );
                 genotypes.push_back(fromIUPAC(posseq.show_base(index0_ind  , site0))[1] );
-
+                
                 
                 
                 total_calls.at( index0_ind  )++;
@@ -352,7 +352,7 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
                     err_types.push_back("rr_oo");
                     err_positions.push_back(site0+1);
                     err_genotypes.push_back( genotypes  );
-
+                    
                 }
                 else if ( fromIUPAC(posseq.show_base(index0_ind  , site0) ).at(0) == ref
                          || fromIUPAC(posseq.show_base(index0_ind  , site0) ).at(1) == ref
@@ -361,7 +361,7 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
                     err_types.push_back("rr_ro");
                     err_positions.push_back(site0+1);
                     err_genotypes.push_back( genotypes  );
-                
+                    
                 }
                 
                 else if ( fromIUPAC(posseq.show_base(index0_ind  , site0) ).size() == 2 ){
@@ -369,7 +369,7 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
                     err_types.push_back("rr_oo2");
                     err_positions.push_back(site0+1);
                     err_genotypes.push_back( genotypes  );
-
+                    
                 }
                 
                 
@@ -384,14 +384,6 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
             << fromIUPAC(posseq.show_base(index0_ind  , site0))[1] << ")\n";
             
         }
-        
-        
-        /*
-         if (posseq.show_base(index1_ind - 1, site0) != 'n') {
-         total_screened.at( index1_ind - 1 )++;
-         }
-         */
-        
         
     }
     
@@ -479,7 +471,7 @@ void summarise::summarise_ind( fasta &preseq, fasta &posseq, int index0_ind,
     
     if( err_file != "NA" ){
         ofstream errFile;
-
+        
         errFile.open(err_file.c_str(), ios::app );
         if( !errFile.is_open() ){
             cerr << "ERROR (summarise): unable to open for output error file " << err_file << "\n";
@@ -524,7 +516,7 @@ void summarise::print( string outfile, bool append ) {
         outputFile <<tags.at(i) << "\tT_amb\t" << total_amb.at(i)  << nas << endl;
         //
         outputFile <<tags.at(i) << "\trr_ro\t" << rr_ro.at(i)  << nas << endl;
-  
+        
         outputFile <<tags.at(i) << "\trr_oo\t" << rr_oo.at(i)  << nas << endl;
         
         outputFile <<tags.at(i) << "\trr_oo2\t" << rr_oo2.at(i)  << nas << endl;

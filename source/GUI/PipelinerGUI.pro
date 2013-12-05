@@ -13,17 +13,18 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-        toob_in_sfscode.cpp \
-        paths.cpp \
-        toob_in_ms.cpp \
-        toob_fasq_bam_bwa.cpp \
-        toob_fas_fasq_art.cpp \
-        toob_bam_vcf_samtools.cpp \
-        run_settings.cpp \
-        pipeline.cpp \
-        toob_user_defined.cpp \
-        plot_results.cpp \
-        highlighter.cpp
+    toob_in_sfscode.cpp \
+    paths.cpp \
+    toob_in_ms.cpp \
+    toob_fasq_bam_bwa.cpp \
+    toob_fas_fasq_art.cpp \
+    toob_bam_vcf_samtools.cpp \
+    run_settings.cpp \
+    pipeline.cpp \
+    toob_user_defined.cpp \
+    plot_results.cpp \
+    highlighter.cpp \
+    bashrunner.cpp
 
 HEADERS  += mainwindow.h \
     toob_in_sfscode.h \
@@ -36,9 +37,11 @@ HEADERS  += mainwindow.h \
     pipeline.h \
     toob_user_defined.h \
     plot_results.h \
-    highlighter.h
+    highlighter.h \
+    bashrunner.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    bashrunner.ui
 
 OTHER_FILES +=
 
