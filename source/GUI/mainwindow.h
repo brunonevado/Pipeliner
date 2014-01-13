@@ -173,8 +173,6 @@ private slots:
 
   void on_pushButtonSaveBash_clicked();
 
-  void on_actionSave_Bash_file_triggered();
-
   void on_spinBox_user_ninds_valueChanged(int arg1);
 
   void on_pushButton_load_user_input_clicked();
@@ -322,6 +320,28 @@ private slots:
   void on_pushButton_runLocally_clicked();
 
   void on_actionRun_triggered();
+
+  void on_pushButton_help_uinput_clicked();
+
+  void on_pushButton_eg_uinput_clicked();
+
+  void on_pushButton_help_ungs_clicked();
+
+  void on_pushButton_eg_ungs_clicked();
+
+  void on_pushButton_help_ualign_clicked();
+
+  void on_pushButton_eg_ualign_clicked();
+
+  void on_pushButton_help_uiSNPcall_clicked();
+
+  void on_pushButton_eg_uiSNPcall_clicked();
+
+  void on_pushButton_help_usites_clicked();
+
+  void on_pushButton_eg_usites_clicked();
+
+  void on_pushButton_help_umSNPcall_clicked();
 
 private:
   Ui::MainWindow *ui;

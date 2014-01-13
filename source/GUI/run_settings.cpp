@@ -9,7 +9,7 @@
 
 run_settings::run_settings(  ) {
   runprefix = "test";
-  dirdata = "";
+  dirdata = QDir::homePath().toStdString();
   runfolder = "";
   num_inds = 3;
   num_reps = 2;

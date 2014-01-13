@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
   QApplication::setStyle(QStyleFactory::create("Fusion"));
   man_index = 0;
   man_len = 11;
-  version_info = "<p align=\"center\">Pipeliner GUI v 0.2.0 : 05122013";
+  version_info = "<p align=\"center\">Pipeliner GUI v 0.2.0 : 13012014";
 
 }
 
@@ -195,7 +195,7 @@ void MainWindow::setDefaults(){
   ui->lineEdit_dirdata->setText( QString::fromStdString(pointer_to_pipeline->daRunSettings.get_dirdata().c_str() ) );
   ui->lineEdit_runfolder->setText( QString::fromStdString(pointer_to_pipeline->daRunSettings.get_runfolder().c_str() ) );
   ui->lineEdit_runprefix->setText( QString::fromStdString(pointer_to_pipeline->daRunSettings.get_runprefix().c_str() ) );
-  //ui->lineEdit_numreps->setText( QString::number(pointer_to_pipeline->daRunSettings.get_numreps()) );
+
   ui->spinBox_nreps->setValue( pointer_to_pipeline->daRunSettings.get_numreps()  );
   ui->checkBox_dirty->setChecked( ( pointer_to_pipeline->daRunSettings.clean_up() ) ? false : true );
 
@@ -467,6 +467,7 @@ void MainWindow::setDefaults(){
   ui->plainTextEdit_user_iSNPcall_bigScreen->setFont(f);
   ui->plainTextEdit_user_mSNPcall_bigScreen->setFont(f);
   ui->plainTextEdit_user_sites_bigScreen->setFont(f);
+  ui->textBrowser_help->setFont(f);
 
   // help
   ui->horizontalSlider_tutorial->setMaximum(man_len);
@@ -474,7 +475,6 @@ void MainWindow::setDefaults(){
   ui->dockWidget_help->hide();
   tutorial_widgets.push_back( ui->tabWidget_main );
   tutorial_widgets.push_back( ui->tabWidget_pipeline );
-
   // default tabs
   ui->tabWidget_main->setCurrentIndex(0);
   ui->tabWidget_pipeline->setCurrentIndex(0);
@@ -555,6 +555,12 @@ void MainWindow::setDefaults(){
   ui->pushButton_WriteBash->setIcon(iWrite);
   ui->pushButton_plots_work->setIcon(iPlot);
   ui->horizontalSlider_tutorial->setEnabled(false);
+  ui->pushButton_help_uinput->setIcon(iInfo);
+  ui->pushButton_help_ungs->setIcon(iInfo);
+  ui->pushButton_help_ualign->setIcon(iInfo);
+  ui->pushButton_help_uiSNPcall->setIcon(iInfo);
+  ui->pushButton_help_umSNPcall->setIcon(iInfo);
+  ui->pushButton_help_usites->setIcon(iInfo);
 }
 
 void MainWindow::on_pushButton_loadHeader_clicked()
@@ -1000,7 +1006,12 @@ QString MainWindow::SaveBash () {
       msgBox.exec();
     }
   else{
-      QString fileName = QFileDialog::getSaveFileName(this, tr("Save Bash file"), QString::fromStdString( "run_" + pointer_to_pipeline->daRunSettings.get_runprefix()),
+
+      QString default_bash = QString::fromStdString(pointer_to_pipeline->daRunSettings.get_dirdata());
+      default_bash.append("/run_");
+      default_bash.append( QString::fromStdString(pointer_to_pipeline->daRunSettings.get_runprefix()) );
+      default_bash.append(".sh");
+      QString fileName = QFileDialog::getSaveFileName(this, tr("Save Bash file"), default_bash,
                                                       "Bash files (*.sh);;All files (*)");
       if (!fileName.isEmpty()) {
           QFile file(fileName);
@@ -1024,11 +1035,6 @@ QString MainWindow::SaveBash () {
 
 
 void MainWindow::on_pushButtonSaveBash_clicked()
-{
-  QString bfile = MainWindow::SaveBash();
-}
-
-void MainWindow::on_actionSave_Bash_file_triggered()
 {
   QString bfile = MainWindow::SaveBash();
 }
@@ -1597,7 +1603,9 @@ void MainWindow::on_pushButton_viewer_down_sum_2_clicked()
 
 void MainWindow::on_pushButton_plots_chooseFile_clicked()
 {
-  QString fileName = QFileDialog::getSaveFileName(this, tr("Choose file to store results"),  "result.pdf", "Pdf files (*.pdf);;" );
+  QString default_pdf = QString::fromStdString(pointer_to_pipeline->daRunSettings.get_dirdata());
+  default_pdf.append("/result.pdf");
+  QString fileName = QFileDialog::getSaveFileName(this, tr("Choose file to store results"),  default_pdf, "Pdf files (*.pdf);;" );
   if (!fileName.isEmpty()) {
       ui->lineEdit_plot_saveTofile->setText(fileName);
       pointer_to_pipeline->Daplotter.set_filename( fileName.toStdString().c_str() );
@@ -1611,6 +1619,9 @@ void MainWindow::on_pushButton_plots_chooseFile_clicked()
 
 void MainWindow::on_pushButton_plots_work_clicked( )
 {
+  if( ui->lineEdit_plot_saveTofile->text() == "" )
+    ui->pushButton_plots_chooseFile->click();
+
   std::vector < std::string > sum_files, sum_names;
   // get files
   for(  int i = 0; i < ui->tableWidget_viewer_sum->rowCount(); i++ ){
@@ -1702,7 +1713,7 @@ void MainWindow::on_pushButton_help_ms_clicked()
   QMessageBox::information(this,"Executables",
                            tr(
                              "<p align=\"center\">ms is a coalescent simulator, used in input step with default options</p>"
-                             "<p align=\"center\"><a href=\"https://home.uchicago.edu/rhudson1/source/mksamples.html\"><span style=\" text-decoration: underline; color:#0000ff;\">website</span></a></p>"
+                             "<p align=\"center\"><a href=\"http://home.uchicago.edu/rhudson1/source/mksamples.html\"><span style=\" text-decoration: underline; color:#0000ff;\">website</span></a></p>"
                              ));
 }
 
@@ -1877,7 +1888,7 @@ void MainWindow::pipeliner_manual ( ){
       ui->textBrowser_help->setText(
             "<p><b>Pipeliner: a short example</b>"
             "<p><b>Pipeline > NGS</b>"
-            "<p>Used to define how to obtain the NGS short reads for each diploid individual analysed. At the end of this step, there should be one (or two, if simulating paired-end sequencing) fasta-quality files per individual. Two options currently available: default art_illumina and User-defined."
+            "<p>Used to define how to obtain the NGS short reads for each diploid individual analysed. At the end of this step, there should be one (or two, if simulating paired-end sequencing) fastq files per individual. Two options currently available: default art_illumina and User-defined."
             "<p>For this example, set the NGS type to <b>art</b>, then set <b>Paired-ends</b> run, set <b>coverage</b> to 6x, and <b>Read length</b> to 75."
             );
       break;
@@ -1890,7 +1901,7 @@ void MainWindow::pipeliner_manual ( ){
       ui->textBrowser_help->setText(
             "<p><b>Pipeliner: a short example</b>"
             "<p><b>Pipeline > Alignment</b>"
-            "<p>Used to specify how to align the NGS short reads from each individual to the reference sequence. This step should start from the fasta-quality files obtained before, and finish with a single aligned bam file for each individual. Two options available: default using bwa, or User-defined step."
+            "<p>Used to specify how to align the NGS short reads from each individual to the reference sequence. This step should start from the fastq files obtained before, and finish with a single aligned bam file for each individual. Two options available: default using bwa, or User-defined step."
             "<p>For this example, set the alignment type to <b>bwa</b>, input to <b>Paired-end</b>, <b>mapping quality - MAPQ</b> to 20 and <b>number of mismatches permitted - NMP</b> to 6."
             );
       break;
@@ -2064,18 +2075,165 @@ void MainWindow::on_pushButton_user_sites_BigScreen_close_clicked()
 
 void MainWindow::on_pushButton_runLocally_clicked()
 {
-  QString bfile = MainWindow::SaveBash();
-  if ( strcmp ( bfile.toStdString().c_str() , "err" ) != 0){
-      QProcess runner;
-      QStringList args;
-      args << "runner" << QString::fromStdString(pointer_to_pipeline->daRunSettings.get_runprefix())
-           << QString::fromStdString(pointer_to_pipeline->daRunSettings.get_dirdata())
-           << bfile << QString::fromStdString(pointer_to_pipeline->daPaths.get_path_bash());
-      runner.startDetached(QString::fromStdString(pointer_to_pipeline->get_name()),args);
+  // check that data folder exists
+  QString dirdata = QString::fromStdString(pointer_to_pipeline->daRunSettings.get_dirdata());
+  if ( !QDir(dirdata).exists() ){
+
+      QMessageBox msgBox;
+
+      msgBox.setText("Error: data folder does not exist. Please create it before running the analysis.");
+      msgBox.setIcon(QMessageBox::Critical);
+      msgBox.setWindowModality(Qt::WindowModal);
+      msgBox.exec();
+    }
+  else{
+      QString bfile = MainWindow::SaveBash();
+      if ( strcmp ( bfile.toStdString().c_str() , "err" ) != 0){
+          QProcess runner;
+          QStringList args;
+          args << "runner" << QString::fromStdString(pointer_to_pipeline->daRunSettings.get_runprefix())
+               << QString::fromStdString(pointer_to_pipeline->daRunSettings.get_dirdata())
+               << bfile << QString::fromStdString(pointer_to_pipeline->daPaths.get_path_bash());
+          runner.startDetached(QString::fromStdString(pointer_to_pipeline->get_name()),args);
+        }
     }
 }
 
 void MainWindow::on_actionRun_triggered()
 {
   ui->pushButton_runLocally->click();
+}
+
+void MainWindow::on_pushButton_help_uinput_clicked()
+{
+  QMessageBox* msgBox = new QMessageBox( this );;
+  msgBox->setAttribute( Qt::WA_DeleteOnClose );
+  msgBox->setText(ui->plainTextEdit_user_input->toolTip());
+  msgBox->setWindowTitle("User-defined input step");
+  msgBox->setWindowModality(Qt::NonModal);
+  msgBox->show();
+}
+
+void MainWindow::on_pushButton_eg_uinput_clicked()
+{
+  ui->plainTextEdit_user_input->clear();
+  ui->plainTextEdit_user_input->appendPlainText("# Example input step using ms. simulates 1 reference and 3 diploid individuals\n");
+  ui->plainTextEdit_user_input->appendPlainText("ms 7 1 -t 40 -r 40 100000 > infile.ms\n");
+  ui->plainTextEdit_user_input->appendPlainText("# Must specify input format: ms, and random sequence 100 Kb long !");
+  ui->spinBox_user_ninds->setValue(3);
+  ui->groupBox_input_user_msinoptions->setEnabled( true );
+  ui->radioButton_in_user_ms->setChecked( true );
+  ui->radioButton_user_userandom->setChecked( true );
+  ui->spinBox_user_seqlen->setValue( 100000 );
+
+}
+
+void MainWindow::on_pushButton_help_ungs_clicked()
+{
+  QMessageBox* msgBox = new QMessageBox( this );;
+  msgBox->setAttribute( Qt::WA_DeleteOnClose );
+  msgBox->setText(ui->plainTextEdit_user_ngs->toolTip());
+  msgBox->setWindowTitle("User-defined NGS simulation step");
+  msgBox->setWindowModality(Qt::NonModal);
+  msgBox->show();
+
+}
+
+void MainWindow::on_pushButton_eg_ungs_clicked()
+{
+  ui->plainTextEdit_user_ngs->clear();
+  ui->plainTextEdit_user_ngs->appendPlainText("# Example NGS simulation step with art_illumina, Paired-Ends run, average cov 10x\n");
+  ui->plainTextEdit_user_ngs->appendPlainText("art_illumina -i infile.fas -p -m 500 -s 10 -l 75 -f 5 -o tempfile\n");
+  ui->plainTextEdit_user_ngs->appendPlainText("mv tempfile1.fq outfile.1.fq");
+  ui->plainTextEdit_user_ngs->appendPlainText("mv tempfile2.fq outfile.2.fq");
+
+}
+
+void MainWindow::on_pushButton_help_ualign_clicked()
+{
+  QMessageBox* msgBox = new QMessageBox( this );;
+  msgBox->setAttribute( Qt::WA_DeleteOnClose );
+  msgBox->setText(ui->plainTextEdit_user_align->toolTip());
+  msgBox->setWindowTitle("User-defined alignment step");
+  msgBox->setWindowModality(Qt::NonModal);
+  msgBox->show();
+
+}
+
+void MainWindow::on_pushButton_eg_ualign_clicked()
+{
+  ui->plainTextEdit_user_align->clear();
+  ui->plainTextEdit_user_align->appendPlainText("# Example alignment step using bwa, for Paired-Ends run\n");
+  ui->plainTextEdit_user_align->appendPlainText("# first index reference");
+  ui->plainTextEdit_user_align->appendPlainText("bwa index -a is reference.fa\n");
+  ui->plainTextEdit_user_align->appendPlainText("# align fastq reads to reference");
+  ui->plainTextEdit_user_align->appendPlainText("bwa aln -n 6 reference.fa infile.1.fq > tempfile.1.sai");
+  ui->plainTextEdit_user_align->appendPlainText("bwa aln -n 6 reference.fa infile.2.fq > tempfile.2.sai\n");
+  ui->plainTextEdit_user_align->appendPlainText("# create bam file and sort it");
+  ui->plainTextEdit_user_align->appendPlainText("bwa sampe reference.fa tempfile.1.sai tempfile.2.sai infile.1.fq infile.2.fq \\");
+  ui->plainTextEdit_user_align->appendPlainText("  | samtools view -q 20 -Suh - | samtools sort -f - outfile.bam");
+  ui->checkBox_user_align_createDict->setChecked( true );
+}
+
+void MainWindow::on_pushButton_help_uiSNPcall_clicked()
+{
+  QMessageBox* msgBox = new QMessageBox( this );;
+  msgBox->setAttribute( Qt::WA_DeleteOnClose );
+  msgBox->setText(ui->plainTextEdit_user_iSNP->toolTip());
+  msgBox->setWindowTitle("User-defined iSNP calling step");
+  msgBox->setWindowModality(Qt::NonModal);
+  msgBox->show();
+
+}
+
+void MainWindow::on_pushButton_eg_uiSNPcall_clicked()
+{
+  ui->plainTextEdit_user_iSNP->clear();
+  ui->plainTextEdit_user_iSNP->appendPlainText("# Example individual SNP calling step with samtools\n");
+  ui->plainTextEdit_user_iSNP->appendPlainText("# index bam file");
+  ui->plainTextEdit_user_iSNP->appendPlainText("samtools index infile.bam\n");
+  ui->plainTextEdit_user_iSNP->appendPlainText("# Individual snp calling using samtools");
+  ui->plainTextEdit_user_iSNP->appendPlainText("samtools mpileup -Q 20 -q 20 -uf reference.fa infile.bam \\");
+  ui->plainTextEdit_user_iSNP->appendPlainText("  | bcftools view -vcg - | vcfutils.pl varFilter > outfile.ind.vcf");
+  ui->checkBox_snpcall_user_iSNP->setChecked( true );
+}
+
+void MainWindow::on_pushButton_help_usites_clicked()
+{
+  QMessageBox* msgBox = new QMessageBox( this );;
+  msgBox->setAttribute( Qt::WA_DeleteOnClose );
+  msgBox->setText(ui->plainTextEdit_user_snp_sites->toolTip());
+  msgBox->setWindowTitle("User-defined sites step");
+  msgBox->setWindowModality(Qt::NonModal);
+  msgBox->show();
+
+}
+
+void MainWindow::on_pushButton_eg_usites_clicked()
+{
+  ui->plainTextEdit_user_snp_sites->clear();
+  ui->plainTextEdit_user_snp_sites->appendPlainText("# create confident sites list with samtools");
+  ui->plainTextEdit_user_snp_sites->appendPlainText("# 1. list sites with depth between 5 and 20 (average simulated depth = 10) and baseQ and mapQ >= 20");
+  ui->plainTextEdit_user_snp_sites->appendPlainText("samtools depth -q 20 -Q 20 infile.bam | grep -v \\# - | grep '[0-9]' \\");
+  ui->plainTextEdit_user_snp_sites->appendPlainText("  | awk  '{ if( $3 >= 5 && $3 <= 20 ) print $2}' > tempfile.depth.sites\n");
+  ui->plainTextEdit_user_snp_sites->appendPlainText("# 2. list invariable (homozygous-reference) sites");
+  ui->plainTextEdit_user_snp_sites->appendPlainText("samtools mpileup -Q 20 -q 20 -uf reference.fa infile.bam \\");
+  ui->plainTextEdit_user_snp_sites->appendPlainText("  | bcftools view -c - | awk  '{ if( $NF == 0) print $2}' > tempfile.invar.sites\n");
+  ui->plainTextEdit_user_snp_sites->appendPlainText("# 3. list invariable positions with appropriate depth (i.e. intersect .depth.sites and .invar.sites)");
+  ui->plainTextEdit_user_snp_sites->appendPlainText("awk 'NR==FNR{a[$0];next} $0 in a' tempfile.depth.sites tempfile.invar.sites > outfile.sites\n");
+  ui->plainTextEdit_user_snp_sites->appendPlainText("# 4. add to sites list the variable positions passing vcfutils varFilter with same depth filters (5-20)");
+  ui->plainTextEdit_user_snp_sites->appendPlainText("samtools mpileup -Q 20 -q 20 -uf reference.fa infile.bam | bcftools view -vcg - | vcfutils.pl varFilter -d 5 -D 20 - \\");
+  ui->plainTextEdit_user_snp_sites->appendPlainText("  | cut -f 2 | grep -v \\# - |  grep '[0-9]' - >> outfile.sites");
+  ui->spinBox_user_snp_sitescol->setValue( 1 );
+}
+
+void MainWindow::on_pushButton_help_umSNPcall_clicked()
+{
+  QMessageBox* msgBox = new QMessageBox( this );;
+  msgBox->setAttribute( Qt::WA_DeleteOnClose );
+  msgBox->setText(ui->plainTextEdit_user_mSNP->toolTip());
+  msgBox->setWindowTitle("User-defined mSNP calling step");
+  msgBox->setWindowModality(Qt::NonModal);
+  msgBox->show();
+
 }

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>964</width>
+    <width>850</width>
     <height>700</height>
    </rect>
   </property>
@@ -44,22 +44,34 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_45" stretch="0">
-       <property name="spacing">
-        <number>12</number>
-       </property>
-       <property name="leftMargin">
-        <number>12</number>
-       </property>
-       <property name="topMargin">
-        <number>12</number>
-       </property>
-       <property name="rightMargin">
-        <number>12</number>
-       </property>
-       <property name="bottomMargin">
-        <number>12</number>
-       </property>
+      <layout class="QVBoxLayout" name="verticalLayout_45">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_73">
+         <item>
+          <widget class="QLabel" name="label_43">
+           <property name="text">
+            <string>Run prefix: </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_runprefix"/>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_37">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
        <item>
         <widget class="QTabWidget" name="tabWidget_main">
          <property name="acceptDrops">
@@ -94,7 +106,7 @@
               <enum>QTabWidget::Rounded</enum>
              </property>
              <property name="currentIndex">
-              <number>3</number>
+              <number>0</number>
              </property>
              <property name="iconSize">
               <size>
@@ -197,7 +209,7 @@
                   <item>
                    <widget class="QStackedWidget" name="stackedWidget_input_settings">
                     <property name="currentIndex">
-                     <number>0</number>
+                     <number>2</number>
                     </property>
                     <widget class="QWidget" name="page_input_ms">
                      <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -915,6 +927,41 @@
                           </property>
                          </spacer>
                         </item>
+                        <item>
+                         <widget class="QPushButton" name="pushButton_eg_uinput">
+                          <property name="maximumSize">
+                           <size>
+                            <width>60</width>
+                            <height>16777215</height>
+                           </size>
+                          </property>
+                          <property name="text">
+                           <string>e.g.</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QPushButton" name="pushButton_help_uinput">
+                          <property name="minimumSize">
+                           <size>
+                            <width>0</width>
+                            <height>0</height>
+                           </size>
+                          </property>
+                          <property name="maximumSize">
+                           <size>
+                            <width>60</width>
+                            <height>16777215</height>
+                           </size>
+                          </property>
+                          <property name="toolTip">
+                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;help&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          </property>
+                          <property name="text">
+                           <string/>
+                          </property>
+                         </widget>
+                        </item>
                        </layout>
                       </item>
                       <item>
@@ -1605,6 +1652,32 @@
                           </property>
                          </spacer>
                         </item>
+                        <item>
+                         <widget class="QPushButton" name="pushButton_eg_ungs">
+                          <property name="maximumSize">
+                           <size>
+                            <width>60</width>
+                            <height>16777215</height>
+                           </size>
+                          </property>
+                          <property name="text">
+                           <string>e.g.</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QPushButton" name="pushButton_help_ungs">
+                          <property name="maximumSize">
+                           <size>
+                            <width>60</width>
+                            <height>16777215</height>
+                           </size>
+                          </property>
+                          <property name="text">
+                           <string/>
+                          </property>
+                         </widget>
+                        </item>
                        </layout>
                       </item>
                       <item>
@@ -2013,6 +2086,32 @@
                           </property>
                          </spacer>
                         </item>
+                        <item>
+                         <widget class="QPushButton" name="pushButton_eg_ualign">
+                          <property name="maximumSize">
+                           <size>
+                            <width>60</width>
+                            <height>16777215</height>
+                           </size>
+                          </property>
+                          <property name="text">
+                           <string>e.g.</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QPushButton" name="pushButton_help_ualign">
+                          <property name="maximumSize">
+                           <size>
+                            <width>60</width>
+                            <height>16777215</height>
+                           </size>
+                          </property>
+                          <property name="text">
+                           <string/>
+                          </property>
+                         </widget>
+                        </item>
                        </layout>
                       </item>
                       <item>
@@ -2143,7 +2242,7 @@
                   <item>
                    <widget class="QStackedWidget" name="stackedWidget_snpcall">
                     <property name="currentIndex">
-                     <number>4</number>
+                     <number>1</number>
                     </property>
                     <widget class="QWidget" name="page_5">
                      <layout class="QGridLayout" name="gridLayout_4">
@@ -2563,6 +2662,32 @@
                               </spacer>
                              </item>
                              <item>
+                              <widget class="QPushButton" name="pushButton_eg_uiSNPcall">
+                               <property name="maximumSize">
+                                <size>
+                                 <width>60</width>
+                                 <height>16777215</height>
+                                </size>
+                               </property>
+                               <property name="text">
+                                <string>e.g.</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QPushButton" name="pushButton_help_uiSNPcall">
+                               <property name="maximumSize">
+                                <size>
+                                 <width>60</width>
+                                 <height>16777215</height>
+                                </size>
+                               </property>
+                               <property name="text">
+                                <string/>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
                               <widget class="QPushButton" name="pushButton_user_iSNPcall_bigScreen">
                                <property name="maximumSize">
                                 <size>
@@ -2759,6 +2884,19 @@
                               </spacer>
                              </item>
                              <item>
+                              <widget class="QPushButton" name="pushButton_help_umSNPcall">
+                               <property name="maximumSize">
+                                <size>
+                                 <width>60</width>
+                                 <height>16777215</height>
+                                </size>
+                               </property>
+                               <property name="text">
+                                <string/>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
                               <widget class="QPushButton" name="pushButton_user_mSNPcall_bigScreen">
                                <property name="maximumSize">
                                 <size>
@@ -2928,6 +3066,32 @@
                                 </size>
                                </property>
                               </spacer>
+                             </item>
+                             <item>
+                              <widget class="QPushButton" name="pushButton_eg_usites">
+                               <property name="maximumSize">
+                                <size>
+                                 <width>60</width>
+                                 <height>16777215</height>
+                                </size>
+                               </property>
+                               <property name="text">
+                                <string>e.g.</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QPushButton" name="pushButton_help_usites">
+                               <property name="maximumSize">
+                                <size>
+                                 <width>60</width>
+                                 <height>16777215</height>
+                                </size>
+                               </property>
+                               <property name="text">
+                                <string/>
+                               </property>
+                              </widget>
                              </item>
                              <item>
                               <widget class="QPushButton" name="pushButton_user_sites_bigScreen">
@@ -3184,7 +3348,7 @@ p, li { white-space: pre-wrap; }
                <item>
                 <widget class="QGroupBox" name="groupBox_9">
                  <property name="toolTip">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For each SNP calling method defined in the pipeline, will estimate coverage, recovery, accuracy, false discovery rate, etc...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For each SNP calling method defined in the pipeline, will estimate recovery, sensitivity, false discovery rate, etc...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="title">
                   <string>Summarise genotype calls' results</string>
@@ -3664,54 +3828,6 @@ p, li { white-space: pre-wrap; }
                 <property name="spacing">
                  <number>-1</number>
                 </property>
-                <item>
-                 <widget class="QLabel" name="label_4">
-                  <property name="minimumSize">
-                   <size>
-                    <width>80</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>80</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Run prefix</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLineEdit" name="lineEdit_runprefix">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="toolTip">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prefix for run. Files created during the analysis will contain this prefix in its name&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer_3">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
                 <item>
                  <widget class="QLabel" name="label_5">
                   <property name="sizePolicy">
@@ -5590,7 +5706,7 @@ p, li { white-space: pre-wrap; }
                   <item>
                    <widget class="QLabel" name="label_37">
                     <property name="toolTip">
-                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Include plots of accuracy as a function of Alternative Allele Count in the original datasets.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;none&lt;/span&gt;: do not include AAC plots&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Singletons+doubletons&lt;/span&gt;: 1 class for singletons for alternative allele, 1 class for doubletons for alternative allele, and 1 class for all remaining mutations&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Full SFS&lt;/span&gt;: 1 class for each possible AAC, i.e. from AAC=1 - for a singleton for the alternative allele - to ACC=&lt;span style=&quot; font-style:italic;&quot;&gt;number_of_individuals x 2&lt;/span&gt; - for a mutation fixed for the alternative allele&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Include plots of sensitivity as a function of Alternative Allele Count in the original datasets.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;none&lt;/span&gt;: do not include AAC plots&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Singletons+doubletons&lt;/span&gt;: 1 class for singletons for alternative allele, 1 class for doubletons for alternative allele, and 1 class for all remaining mutations&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Full SFS&lt;/span&gt;: 1 class for each possible AAC, i.e. from AAC=1 - for a singleton for the alternative allele - to ACC=&lt;span style=&quot; font-style:italic;&quot;&gt;number_of_individuals x 2&lt;/span&gt; - for a mutation fixed for the alternative allele&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                     <property name="text">
                      <string>AAC classes:</string>
@@ -6205,7 +6321,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>964</width>
+     <width>850</width>
      <height>22</height>
     </rect>
    </property>
@@ -6220,7 +6336,6 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionLoad_paths"/>
    <addaction name="separator"/>
    <addaction name="actionPreview_Bash"/>
-   <addaction name="actionSave_Bash_file"/>
    <addaction name="actionRun"/>
    <addaction name="separator"/>
    <addaction name="actionHelp"/>
@@ -6383,21 +6498,6 @@ p, li { white-space: pre-wrap; }
   <action name="actionSave_Paths">
    <property name="text">
     <string>Save Paths</string>
-   </property>
-  </action>
-  <action name="actionSave_Bash_file">
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/icons/icons/save.ico</normaloff>:/icons/icons/save.ico</iconset>
-   </property>
-   <property name="text">
-    <string>Save Bash file</string>
-   </property>
-   <property name="toolTip">
-    <string>Save Bash commands to file</string>
-   </property>
-   <property name="shortcut">
-    <string>Meta+S</string>
    </property>
   </action>
   <action name="actionFonts">

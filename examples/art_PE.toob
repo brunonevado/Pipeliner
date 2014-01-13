@@ -1,6 +1,6 @@
 # User-defined NGS simulation step with art. 
 # Assumes art is installed in path and executable is called art_illumina.
 art_illumina -i infile.fas -p -m 500 -s 10 -l 75 -f 10 -o tempfile
-cp tempfile1.fq outfile.1.fq
-cp tempfile2.fq outfile.2.fq
+mv tempfile1.fq outfile.1.fq
+mv tempfile2.fq outfile.2.fq
 

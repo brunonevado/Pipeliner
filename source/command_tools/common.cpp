@@ -132,7 +132,19 @@ vector <char> get_uniques_lc ( vector <char> bases_to_check ){
 
 void msplit(string s , string delim,  vector<string> * output){
     
+    //
+    if( output->size() != 0 ){
+        std::cerr << "WARNING: result vector for msplit is not empty!" << std::endl;
+        for (unsigned int i = 0; i < output->size(); i++) {
+            std::cerr << output->at(i) << " " ;
+        }
+        std::cerr << std::endl;
+    }
     
+
+    
+    
+    //
     unsigned long start = 0U;
     unsigned long end = s.find(delim);
     while (end != std::string::npos)
@@ -147,7 +159,17 @@ void msplit(string s , string delim,  vector<string> * output){
 
 void msplit2( const string& s , string delim,  vector<string> * output){
     
+    //
+    if( output->size() != 0 ){
+        std::cerr << "WARNING: result vector for msplit is not empty!" << std::endl;
+        for (unsigned int i = 0; i < output->size(); i++) {
+            std::cerr << output->at(i) << " " ;
+        }
+        std::cerr << std::endl;
+    }
     
+
+    //
     unsigned long start = 0U;
     unsigned long end = s.find(delim);
     while (end != std::string::npos)

@@ -52,7 +52,8 @@ int extract_gff_from_fas ( vector<string> * ,  vector<string> * );
 
 int main(int argc, char* argv[])
 {
-    string version = "0.2.0 20112013";
+    string version = "0.2.0 09012014";
+    // 09012014 : changed -sites option 
     // 20112013 : added outcome rr_ro to summarisePipeline
     // 24102013 : added option to ignore multi-allelic SNPs in input vcf (if set, will consider only RR, RA1 and A1A1)
     vector <string> args;
@@ -373,7 +374,7 @@ int vcf2fas (vector<string> *inargs, vector<string> *invalues ) {
         else if( !strncmp (inargs->at(i).c_str(), "-in_ref", 6) || !strncmp (inargs->at(i).c_str(), "-ref", 5) ){
             in_ref = invalues->at(i).c_str();
         }
-        else if( !strncmp (inargs->at(i).c_str(), "-in_sites", 6) || !strncmp (inargs->at(i).c_str(), "-sites", 5) ){
+        else if( !strncmp (inargs->at(i).c_str(), "-in_sites", 6) || inargs->at(i) == "-sites" ){
             in_sites = invalues->at(i).c_str();
         }
         else if( !strncmp (inargs->at(i).c_str(), "-out_fas", 6) || !strncmp (inargs->at(i).c_str(), "-out", 5) ){
@@ -382,7 +383,7 @@ int vcf2fas (vector<string> *inargs, vector<string> *invalues ) {
         else if( !strncmp (inargs->at(i).c_str(), "-names", 6)  ){
             names = invalues->at(i).c_str();
         }
-        else if( !strncmp (inargs->at(i).c_str(), "-sites_col", 6) || !strncmp (inargs->at(i).c_str(), "-column", 3)  ){
+        else if( !strncmp (inargs->at(i).c_str(), "-sites_col", 9) || !strncmp (inargs->at(i).c_str(), "-column", 3)  ){
             sites_col = atoi(invalues->at(i).c_str());
         }
         else if( !strncmp (inargs->at(i).c_str(), "-append", 6)  ){
@@ -817,17 +818,17 @@ int summarisePipeline (vector<string> *inargs, vector<string> *invalues ) {
         else if( !strncmp (inargs->at(i).c_str(), "-in_fasta", 6) || !strncmp (inargs->at(i).c_str(), "-fasta", 5) ){
             in_fasta = invalues->at(i).c_str();
         }
-        else if( !strncmp (inargs->at(i).c_str(), "-in_sites", 6) || !strncmp (inargs->at(i).c_str(), "-sites", 5) ){
-            in_sites = invalues->at(i).c_str();
-        }
         else if( !strncmp (inargs->at(i).c_str(), "-out_sum", 6) || !strncmp (inargs->at(i).c_str(), "-out", 5) ){
             out_sum = invalues->at(i).c_str();
         }
         else if( !strncmp (inargs->at(i).c_str(), "-tag", 6)  ){
             tag = invalues->at(i).c_str();
         }
-        else if( !strncmp (inargs->at(i).c_str(), "-sites_col", 6) || !strncmp (inargs->at(i).c_str(), "-column", 3)  ){
+        else if( !strncmp (inargs->at(i).c_str(), "-sites_col", 9) || !strncmp (inargs->at(i).c_str(), "-column", 3)  ){
             sites_col = atoi(invalues->at(i).c_str());
+        }
+        else if( !strncmp (inargs->at(i).c_str(), "-in_sites", 6) || inargs->at(i) == "-sites" ){
+            in_sites = invalues->at(i).c_str();
         }
         else if( !strncmp (inargs->at(i).c_str(), "-append", 6)  ){
             append = ( atoi(invalues->at(i).c_str())  == 1 ) ? true : false;

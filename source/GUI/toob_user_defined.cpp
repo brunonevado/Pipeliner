@@ -35,7 +35,7 @@ toob_in_user::toob_in_user () {
   find_ms = "infile.ms" ;
   replace_ms = "$RUNFOLDER/$RUNPREFIX.replicate$REP.ms";
   find_temp = "tempfile";
-  replace_temp = "$RUNFOLDER/$RUNPREFIX.replicate$REP";
+  replace_temp = "$RUNFOLDER/$RUNPREFIX.replicate${REP}";
   keywords.push_back("infile\\.fas");
   keywords.push_back("infile\\.ms");
   keywords.push_back("tempfile");
@@ -46,7 +46,7 @@ toob_ngs_user::toob_ngs_user() {
   toob_type = "ngs.user";
   num_ends = 2;
   find_temp = "tempfile";
-  replace_temp = "$RUNFOLDER/$RUNPREFIX.replicate$REP";
+  replace_temp = "$RUNFOLDER/$RUNPREFIX.replicate${REP}";
   find_infas = "infile.fas";
   replace_infas = "$RUNFOLDER/$RUNPREFIX.replicate$REP.Ind$IND.fas";
   find_outfasq = "outfile.fq";
@@ -73,7 +73,7 @@ toob_align_user::toob_align_user() {
   addReadGroups = true;
   createDict = false;
   find_temp       = "tempfile";
-  replace_temp    = "$RUNFOLDER/$RUNPREFIX.replicate$REP";
+  replace_temp    = "$RUNFOLDER/$RUNPREFIX.replicate${REP}";
   find_number     = "ind_number";
   replace_number  = "$IND";
   find_ref        = "reference.fa";
@@ -103,7 +103,7 @@ toob_snpcall_user::toob_snpcall_user() {
   bam_sep = " ";
   sites_col = 1;
   find_temp       = "tempfile";
-  replace_temp    = "$RUNFOLDER/$RUNPREFIX.replicate$REP";
+  replace_temp    = "$RUNFOLDER/$RUNPREFIX.replicate${REP}";
   find_number     = "ind_number";
   replace_number  = "$IND";
   find_ref        = "reference.fa";
@@ -429,8 +429,7 @@ void toob_snpcall_user::write ( std::vector <std::string> & cmds, std::vector <i
       if( c_mbam == 0 ){
           errors.push_back("user defined mSNPcall: input bam file not used");
         }
-    }
-  cmds.push_back(ss.str()); indent.push_back(0); ss.str("");
+      cmds.push_back(ss.str()); indent.push_back(0); ss.str("");
   cmds.push_back("");indent.push_back(0);
   cmds.push_back("for((IND=1; IND<=$NUMINDS; IND++))");indent.push_back(0);
   cmds.push_back("do");indent.push_back(1);
@@ -442,6 +441,6 @@ void toob_snpcall_user::write ( std::vector <std::string> & cmds, std::vector <i
 
   cmds.push_back("# FINISHED SNP CALLING AND FILTERING STEP"); indent.push_back(0);
   cmds.push_back(""); indent.push_back(0);
-
+}
 
 }
