@@ -1,0 +1,4 @@
+# create index
+bowtie-build reference.fa tempfile.index
+# align reads
+bowtie -S tempfile.index infile.fq | samtools view -bS - | samtools sort -f - outfile.bam
