@@ -81,7 +81,7 @@
           <string notr="true"/>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>0</number>
          </property>
          <property name="iconSize">
           <size>
@@ -209,7 +209,7 @@
                   <item>
                    <widget class="QStackedWidget" name="stackedWidget_input_settings">
                     <property name="currentIndex">
-                     <number>2</number>
+                     <number>1</number>
                     </property>
                     <widget class="QWidget" name="page_input_ms">
                      <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -258,7 +258,7 @@
                                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;How many diploid indivduals to simulate&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                                 </property>
                                 <property name="maximum">
-                                 <number>1000</number>
+                                 <number>100000</number>
                                 </property>
                                </widget>
                               </item>
@@ -285,7 +285,7 @@
                                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;mutation parameter for ms.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;4 x µ x sequence_length&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                                 </property>
                                 <property name="maximum">
-                                 <double>1000.000000000000000</double>
+                                 <double>100000.000000000000000</double>
                                 </property>
                                </widget>
                               </item>
@@ -312,7 +312,7 @@
                                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;recombination parameter for ms.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;4 x r x sequence_length&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                                 </property>
                                 <property name="maximum">
-                                 <double>1000.000000000000000</double>
+                                 <double>100000.000000000000000</double>
                                 </property>
                                </widget>
                               </item>
@@ -339,7 +339,7 @@
                                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time of splitting between population and reference. Leave blank to simulate reference from same population.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;number_generations / (4 x Ne)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                                 </property>
                                 <property name="maximum">
-                                 <double>1000.000000000000000</double>
+                                 <double>100000.000000000000000</double>
                                 </property>
                                </widget>
                               </item>
@@ -430,7 +430,7 @@
                                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Lenght of sequence&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                                </property>
                                <property name="maximum">
-                                <number>10000000</number>
+                                <number>1000000000</number>
                                </property>
                               </widget>
                              </item>
@@ -1113,7 +1113,7 @@
                                 <number>1</number>
                                </property>
                                <property name="maximum">
-                                <number>10000000</number>
+                                <number>1000000000</number>
                                </property>
                               </widget>
                              </item>

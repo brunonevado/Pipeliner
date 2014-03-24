@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
   QApplication::setStyle(QStyleFactory::create("Fusion"));
   man_index = 0;
   man_len = 11;
-  version_info = "<p align=\"center\">Pipeliner GUI v 0.2.0 : 13012014";
+  version_info = "<p align=\"center\">Pipeliner GUI v 0.2.0 : 19032014";
 
 }
 
@@ -33,7 +33,7 @@ void MainWindow::about()
 
   atext.append(
         "<p align=\"center\"><a href=\"https://github.com/brunonevado/pipeliner\"><span style=\" text-decoration: underline; color:#0000ff;\">website</span></a></p><p><a href=\"https://github.com/brunonevado/pipeliner\"><span style=\" text-decoration: underline; color:#0000ff;\"></p>"
-        "Contact: bruno.nevado@cragenomica.es</p>"
+        "Contact: brunonevado@gmail.com</p>"
         "<p align=\"center\">This program uses <a href=\"http://qt-project.org/\"><span style=\" text-decoration: underline; color:#0000ff;\">Qt version 5.1.0</span></a></p><p><a href=\"http://qt-project.org/\"><span style=\" text-decoration: underline; color:#0000ff;\"></p>"
         );
   QMessageBox::about(this, tr("About Pipeliner GUI"), atext);
