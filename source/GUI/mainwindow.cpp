@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
   QApplication::setStyle(QStyleFactory::create("Fusion"));
   man_index = 0;
   man_len = 11;
-  version_info = "<p align=\"center\">Pipeliner GUI v 0.2.0 : 19032014";
+  version_info = "<p align=\"center\">Pipeliner GUI v 0.2.0 : 19052014";
 
 }
 

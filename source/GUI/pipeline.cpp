@@ -458,7 +458,7 @@ pipeline_output pipeline::get_cmds (){
       toreturn.push_back("\t\tdo");
       ss << "\t\t" << daPaths.get_path_pipeliner() << " vcf2fas -vcf $RUNFOLDER/$RUNPREFIX.mSNPcall.replicate$REP.Ind$IND.mSNPcall.flt.vcf \\";
       toreturn.push_back(ss.str()); ss.str("");
-      toreturn.push_back("\t\t  -sites $RUNFOLDER/$RUNPREFIX.replicate$REP.Ind$IND.sites \\");
+      toreturn.push_back("\t\t  -sites $RUNFOLDER/$RUNPREFIX.replicate$REP.Ind$IND.mSNPcall.sites \\");
       toreturn.push_back("\t\t  -ref $RUNFOLDER/$RUNPREFIX.replicate$REP.reference.fa \\");
       toreturn.push_back("\t\t  -out $RUNFOLDER/$RUNPREFIX.replicate$REP.fas.mstats_mSNPcall.fas \\");
       if ( active_snpcall == 0 ){
