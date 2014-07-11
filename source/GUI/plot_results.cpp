@@ -407,7 +407,7 @@ plot_results::plot_results()
   plot_fun.push_back("        hetero_classes <- vector()");
   plot_fun.push_back("        for(i in 1:length(hetero_min_lims))");
   plot_fun.push_back("            hetero_classes[i]<-paste(hetero_min_lims[i], hetero_max_lims[i] ,sep=\":\")");
-  plot_fun.push_back("        ymax= min(  max(peracc_hetero)*1.3 )");
+  plot_fun.push_back("        ymax= min(  max(peracc_hetero,na.rm=TRUE)*1.3 )");
   plot_fun.push_back("        barplot(yaxt='n',peracc_hetero,beside=TRUE, names.arg=hetero_classes,las=2,legend.text=names(mlist),args.legend=list(x=\"topright\",ncol=5,bty='n',cex=.9),ylim=c(0,ymax))");
   plot_fun.push_back("        axis(2,seq(0,min(c(ymax,100)),20),seq(0,min(c(100,ymax)),20))");
   plot_fun.push_back("        title(main=\"Heterozygous SNPs\",y=\"Sensitivity per AAC (%)\",x=\"AAC class\" )");
