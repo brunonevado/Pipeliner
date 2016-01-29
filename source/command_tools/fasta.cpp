@@ -231,9 +231,10 @@ void fasta::build_from_ms ( const ms& in, const fasta& ancestral){
     // prepare alternative sequence
     for( unsigned int mut = 0; mut < in.num_seg_sites(); mut++){
         int site = round(in.positions.at(mut) * ancestral.num_bases() );
+        if( site == 0 ){ site++;}
         segsites_int.push_back(site);
         char adraw = bases[ rand() % 4 ];
-        while ( adraw == ancestral.matrix[0].at(site)){
+        while ( adraw == ancestral.matrix[0].at(site-1)){
             adraw = bases[ rand() % 4 ];
         }
         
